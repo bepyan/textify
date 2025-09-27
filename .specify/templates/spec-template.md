@@ -116,11 +116,12 @@ _GATE: Automated checks run during main() execution_
 
 ### Constitution Alignment
 
-- [ ] Performance requirements specified (response times, load capacity)
+- [ ] Performance requirements specified (Core Web Vitals, reasonable targets)
 - [ ] Accessibility requirements included (WCAG 2.1 AA compliance)
 - [ ] User experience consistency considerations
 - [ ] Error handling and edge cases documented
-- [ ] Observability requirements (logging, monitoring) identified
+- [ ] Code organization and maintainability considerations
+- [ ] Frontend architecture patterns identified
 
 ---
 

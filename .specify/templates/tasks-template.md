@@ -54,7 +54,7 @@
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
-**Constitution Requirement: 80% code coverage, TDD mandatory**
+**Constitution Requirement: 80% code coverage, TDD mandatory, readable and maintainable code**
 
 - [ ] T004 [P] Contract test POST /api/users in tests/contract/test_users_post.ts
 - [ ] T005 [P] Contract test GET /api/users/{id} in tests/contract/test_users_get.ts
@@ -65,7 +65,7 @@
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
 
-**Constitution Requirements: TypeScript strict mode, max 20 lines per function, max 200 lines per file**
+**Constitution Requirements: TypeScript strict mode, max 20 lines per function, max 200 lines per file, readable code with named constants and clear abstractions**
 
 - [ ] T010 [P] User model with TypeScript types in src/models/user.ts
 - [ ] T011 [P] UserService CRUD with proper error handling in src/services/user_service.ts

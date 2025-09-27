@@ -51,12 +51,15 @@
 
 _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
-### Code Quality Gates
+### Code Quality & Readability
 
 - [ ] TypeScript 엄격 모드 활성화 확인
 - [ ] ESLint/Prettier 설정 구성
 - [ ] 함수/파일 크기 제한 준수 계획
 - [ ] 네이밍 컨벤션 적용 방안
+- [ ] 매직 넘버 명명된 상수로 대체 계획
+- [ ] 복잡한 조건문 명명된 변수로 분리 계획
+- [ ] 구현 세부사항 추상화 방안
 
 ### Testing Requirements
 
@@ -65,26 +68,30 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 - [ ] 테스트 계층 구조 (단위/통합/E2E) 정의
 - [ ] API contract 테스트 계획
 
-### UX Consistency
+### Frontend Architecture & UX
 
 - [ ] 디자인 시스템 컴포넌트 사용 계획
 - [ ] 접근성(a11y) 요구사항 확인
 - [ ] 반응형 디자인 적용 방안
 - [ ] 일관된 상태 UI 패턴 정의
+- [ ] 조건부 렌더링 분리 계획
+- [ ] Props drilling 방지 방안 (컴포넌트 컴포지션)
+- [ ] 일관된 반환 타입 사용 계획
 
-### Performance Standards
+### Performance & UX Excellence
 
-- [ ] 프론트엔드 성능 목표 설정 (LCP < 2.5s, FID < 100ms)
-- [ ] 백엔드 응답 시간 목표 (95th percentile < 200ms)
-- [ ] 번들 크기 최적화 계획
-- [ ] 성능 모니터링 방안
+- [ ] Core Web Vitals 기준 준수 계획 (LCP < 2.5s, FID < 100ms, CLS < 0.1)
+- [ ] 번들 크기 최적화 계획 (코드 스플리팅, 트리 쉐이킹)
+- [ ] 이미지 최적화 및 lazy loading 적용
+- [ ] 메모리 누수 방지 계획
 
-### Observability
+### Code Organization & Maintainability
 
+- [ ] 기능/도메인별 디렉토리 구조 계획
+- [ ] 단일 책임 원칙 적용 방안
+- [ ] 고유하고 설명적인 이름 사용 계획
 - [ ] 구조화된 로깅 계획
-- [ ] 에러 추적 시스템 구성
-- [ ] 성능 메트릭 수집 방안
-- [ ] 모니터링 대시보드 설계
+- [ ] 에러 추적 및 처리 방안
 
 ## Project Structure
 
@@ -267,4 +274,4 @@ _This checklist is updated during execution flow_
 
 ---
 
-_Based on Constitution v1.0.0 - See `.specify/memory/constitution.md`_
+_Based on Constitution v1.1.0 - See `.specify/memory/constitution.md`_

@@ -1,14 +1,16 @@
 <!--
 Sync Impact Report:
-Version change: Initial → 1.0.0
-Modified principles: N/A (Initial creation)
+Version change: 1.0.0 → 1.1.0
+Modified principles: 
+- Performance Excellence → Performance & UX Excellence (완화된 성능 요구사항)
+- Observability & Monitoring → Observability (간소화)
 Added sections:
-- Core Principles (5 principles focused on code quality, testing, UX, performance)
-- Performance Standards
-- Development Workflow
-- Governance
-Removed sections: N/A
-Templates requiring updates: ✅ All templates align with new constitution
+- Frontend Code Quality (frontend-rules 기반)
+- Code Readability Guidelines
+Removed sections:
+- Performance Standards (개인 프로젝트에 과도함)
+- Team-based governance processes
+Templates requiring updates: ✅ Updated plan-template.md, spec-template.md, tasks-template.md
 Follow-up TODOs: None
 -->
 
@@ -16,18 +18,20 @@ Follow-up TODOs: None
 
 ## Core Principles
 
-### I. Code Quality First (NON-NEGOTIABLE)
+### I. Code Quality & Readability (NON-NEGOTIABLE)
 
 모든 코드는 다음 품질 기준을 MUST 충족해야 합니다:
 
 - TypeScript 엄격 모드 사용 및 타입 안전성 보장
 - ESLint/Prettier 규칙 100% 준수
-- 코드 리뷰 없이는 메인 브랜치 병합 금지
 - 함수당 최대 20줄, 파일당 최대 200줄 제한
 - 명확한 네이밍 컨벤션: 변수는 camelCase, 상수는 UPPER_SNAKE_CASE, 컴포넌트는 PascalCase
 - 파일명 컨벤션: 케밥 케이스
+- 매직 넘버는 명명된 상수로 대체
+- 복잡한 조건문은 명명된 변수로 분리
+- 구현 세부사항은 전용 컴포넌트/HOC로 추상화
 
-품질 저하는 기술 부채 증가와 유지보수 비용 증가로 이어지므로 타협할 수 없습니다.
+코드는 읽기 쉽고 이해하기 쉬워야 하며, 인지 부하를 최소화해야 합니다.
 
 ### II. Test-Driven Development (TDD)
 
@@ -37,82 +41,82 @@ Follow-up TODOs: None
 - 최소 80% 코드 커버리지 유지
 - 단위 테스트, 통합 테스트, E2E 테스트 계층별 구성
 - 모든 API 엔드포인트는 contract 테스트 필수
-- CI/CD 파이프라인에서 테스트 실패 시 배포 중단
 
 테스트는 코드의 신뢰성을 보장하고 리팩토링 시 안전망 역할을 합니다.
 
-### III. User Experience Consistency
+### III. Frontend Architecture & UX
 
-일관된 사용자 경험 제공을 위해:
+일관된 사용자 경험과 예측 가능한 코드 구조를 위해:
 
 - 디자인 시스템 기반 컴포넌트 라이브러리 사용
 - 접근성(a11y) 표준 준수: WCAG 2.1 AA 레벨
 - 반응형 디자인: 모바일 우선 접근법
 - 로딩 상태, 에러 상태, 빈 상태에 대한 일관된 UI 패턴
-- 사용자 피드백 수집 및 반영 프로세스
+- 조건부 렌더링은 별도 컴포넌트로 분리
+- 복잡한 삼항 연산자는 if/else 또는 IIFE로 대체
+- Props drilling 대신 컴포넌트 컴포지션 사용
+- 일관된 반환 타입 사용 (특히 API 훅과 검증 함수)
 
-사용자 중심 설계는 제품의 성공을 결정하는 핵심 요소입니다.
+코드는 예측 가능하고 응집도가 높아야 하며, 결합도는 낮아야 합니다.
 
-### IV. Performance Excellence
+### IV. Performance & UX Excellence
 
-성능은 사용자 경험의 핵심입니다:
+성능과 사용자 경험의 균형을 추구합니다:
 
-- 프론트엔드: First Contentful Paint < 1.5초, Largest Contentful Paint < 2.5초
-- 백엔드: API 응답 시간 95th percentile < 200ms
-- 번들 크기 최적화: 초기 로드 < 100KB (gzipped)
+- 프론트엔드: Core Web Vitals 기준 준수 (LCP < 2.5s, FID < 100ms, CLS < 0.1)
+- 번들 크기 최적화: 코드 스플리팅, 트리 쉐이킹 적용
 - 이미지 최적화 및 lazy loading 적용
-- 메모리 사용량 모니터링 및 최적화
+- 메모리 누수 방지 및 적절한 정리
+- 불필요한 리렌더링 방지
 
-성능 저하는 사용자 이탈률 증가로 직결되므로 지속적인 모니터링이 필요합니다.
+개인 프로젝트 특성상 엄격한 성능 검증보다는 합리적인 최적화에 집중합니다.
 
-### V. Observability & Monitoring
+### V. Code Organization & Maintainability
 
-시스템의 투명성과 디버깅 가능성을 보장합니다:
+코드의 구조와 유지보수성을 보장합니다:
 
+- 기능/도메인별 디렉토리 구조 (타입별 구조 지양)
+- 단일 책임 원칙: 함수는 이름에서 암시하는 동작만 수행
+- 고유하고 설명적인 이름 사용 (모호함 방지)
+- 관련 로직의 응집도 높이기 (폼 검증, 매직 넘버 등)
 - 구조화된 로깅: JSON 형태로 일관된 로그 포맷
-- 에러 추적 및 알림 시스템 구축
-- 성능 메트릭 수집 및 대시보드 구성
-- 사용자 행동 분석을 위한 이벤트 트래킹
-- 정기적인 성능 및 보안 감사
+- 에러 추적 및 적절한 에러 처리
 
-문제 발생 시 신속한 원인 파악과 해결을 위해 필수적입니다.
+코드는 읽기 쉽고, 수정하기 쉽고, 확장하기 쉬워야 합니다.
 
-## Performance Standards
+## Frontend Code Quality Guidelines
 
-### Frontend Performance
+### Readability Patterns
 
-- **Core Web Vitals 준수**: LCP < 2.5s, FID < 100ms, CLS < 0.1
-- **번들 최적화**: 코드 스플리팅, 트리 쉐이킹, 동적 임포트 활용
-- **캐싱 전략**: 브라우저 캐시, CDN 활용, 서비스 워커 구현
-- **이미지 최적화**: WebP 포맷, 적절한 크기 조정, lazy loading
+- **매직 넘버 명명**: `const ANIMATION_DELAY_MS = 300` 형태로 의미 부여
+- **복잡한 조건 명명**: `const isValidUser = user.isActive && user.hasPermission`
+- **구현 세부사항 추상화**: 인증 체크, 다이얼로그 로직 등을 전용 컴포넌트로 분리
+- **조건부 렌더링 분리**: 역할별로 다른 컴포넌트 사용
+- **복잡한 삼항 연산자 단순화**: IIFE나 if/else 사용
 
-### Backend Performance
+### Predictability Patterns
 
-- **응답 시간**: 평균 < 100ms, 95th percentile < 200ms
-- **처리량**: 최소 1000 req/s 지원
-- **데이터베이스**: 쿼리 최적화, 인덱스 활용, 커넥션 풀링
-- **메모리 관리**: 메모리 누수 방지, 가비지 컬렉션 최적화
+- **일관된 반환 타입**: API 훅은 항상 Query 객체, 검증 함수는 Discriminated Union
+- **단일 책임**: 함수는 이름에서 암시하는 동작만 수행 (숨겨진 부작용 금지)
+- **고유한 이름**: 커스텀 래퍼는 `httpService.getWithAuth()` 같이 명확한 이름 사용
+
+### Cohesion & Coupling
+
+- **기능별 구조**: `domains/user/`, `domains/product/` 형태로 관련 파일 그룹화
+- **상태 관리 범위**: 필요한 상태만 의존하도록 훅 분리
+- **컴포넌트 컴포지션**: Props drilling 대신 직접 렌더링 활용
 
 ## Development Workflow
-
-### Code Review Process
-
-- 모든 PR은 최소 1명의 승인 필요
-- 자동화된 테스트 통과 후에만 리뷰 시작
-- 코드 품질, 성능, 보안, 접근성 관점에서 검토
-- 리뷰어는 24시간 내 피드백 제공
 
 ### Quality Gates
 
 - **Pre-commit**: 린트, 포맷팅, 타입 체크
 - **Pre-push**: 단위 테스트, 통합 테스트 실행
-- **CI/CD**: 전체 테스트 스위트, 보안 스캔, 성능 테스트
-- **배포 전**: E2E 테스트, 성능 벤치마크 확인
+- **배포 전**: E2E 테스트 실행
 
 ### Branch Strategy
 
 - `main`: 프로덕션 배포 가능한 안정 버전
-- `develop`: 개발 통합 브랜치
 - `feature/*`: 기능 개발 브랜치
 - `hotfix/*`: 긴급 수정 브랜치
 
@@ -122,15 +126,13 @@ Follow-up TODOs: None
 
 헌법 수정은 다음 절차를 따릅니다:
 
-1. 수정 제안서 작성 및 팀 검토
+1. 수정 제안서 작성 및 검토
 2. 영향도 분석 및 마이그레이션 계획 수립
-3. 팀 전체 합의 (75% 이상 동의)
-4. 문서 업데이트 및 관련 템플릿 동기화
+3. 문서 업데이트 및 관련 템플릿 동기화
 
 ### Compliance Review
 
-- 모든 PR은 헌법 준수 여부 확인
-- 월간 헌법 준수 현황 리뷰
+- 모든 변경사항은 헌법 준수 여부 확인
 - 위반 사항 발견 시 즉시 개선 조치
 - 복잡성 증가는 명확한 근거와 함께 문서화
 
@@ -141,4 +143,4 @@ Follow-up TODOs: None
 - MINOR: 새로운 원칙 추가 또는 기존 원칙 확장
 - PATCH: 명확화, 오타 수정, 비본질적 개선
 
-**Version**: 1.0.0 | **Ratified**: 2025-01-27 | **Last Amended**: 2025-01-27
+**Version**: 1.1.0 | **Ratified**: 2025-01-27 | **Last Amended**: 2025-09-27
