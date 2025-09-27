@@ -1,0 +1,13 @@
+# output
+out
+dist
+coverage
+*.tgz
+.cache
+*.tsbuildinfo
+*.gen.ts
+
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json

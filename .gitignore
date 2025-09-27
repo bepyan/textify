@@ -1,0 +1,25 @@
+# dependencies (bun install)
+node_modules
+
+# output
+out
+dist
+build
+coverage
+*.tgz
+.cache
+*.tsbuildinfo
+.react-router
+
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# env
+.env
+.env.*
+!.env.sample
+
+# IDE
+.DS_Store
