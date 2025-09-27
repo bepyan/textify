@@ -64,7 +64,7 @@ export default defineConfig(
       import: importPlugin,
     },
     settings: {
-      'import/internal-regex': '^@repo/',
+      'import/internal-regex': '^~/',
     },
     rules: {
       'import/order': [
