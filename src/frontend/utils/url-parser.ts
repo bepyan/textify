@@ -26,7 +26,7 @@ export function parseUrl(url: string): ParsedUrl {
     }
 
     return { platform: 'unknown', id: null, isValid: false };
-  } catch (error) {
+  } catch {
     return { platform: 'unknown', id: null, isValid: false };
   }
 }
