@@ -161,3 +161,18 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Custom Theme */
+:root {
+  --header-h: 3.375rem;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --header-h: 4rem;
+  }
+}
+
+@theme {
+  --spacing-header: var(--header-h);
+}
