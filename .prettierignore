@@ -12,6 +12,10 @@ coverage
 
 *.gen.ts
 worker-configuration.d.ts
+.specify
+.cursor
+.spec
+specs
 
 # logs
 logs
@@ -20,3 +24,4 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # IDE
 .DS_Store
+ 
