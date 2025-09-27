@@ -110,7 +110,7 @@ const tooltipArrowStrokeVariants = cva('', {
   variants: {
     variant: {
       default: '',
-      light: 'stroke-background stroke-border',
+      light: 'stroke-border',
     },
   },
   defaultVariants: {
