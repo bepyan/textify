@@ -1,0 +1,387 @@
+openapi: 3.0.3
+info:
+  title: Textify Content Extraction API
+  description: API for extracting clean text content from YouTube videos and Naver blog posts
+  version: 1.0.0
+  contact:
+    name: Textify API Support
+    email: support@textify.app
+
+servers:
+  - url: https://textify.bepyan.workers.dev
+    description: Production server (Cloudflare Workers - 통합 서빙)
+  - url: http://localhost:8787
+    description: Development server (Bun + Wrangler)
+
+paths:
+  /api/extract:
+    post:
+      summary: Extract content from URL
+      description: Extracts clean text content from supported platforms (YouTube, Naver Blog)
+      operationId: extractContent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtractionRequest'
+            examples:
+              youtube:
+                summary: YouTube video extraction
+                value:
+                  url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+                  options:
+                    language: 'ko'
+                    includeTimestamps: true
+              naver:
+                summary: Naver blog extraction
+                value:
+                  url: 'https://blog.naver.com/example/123456789'
+                  options: {}
+      responses:
+        '200':
+          description: Content extracted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtractionResponse'
+              examples:
+                success:
+                  summary: Successful extraction
+                  value:
+                    success: true
+                    data:
+                      id: '550e8400-e29b-41d4-a716-446655440000'
+                      sourceUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+                      sourceType: 'youtube'
+                      title: 'Rick Astley - Never Gonna Give You Up'
+                      content: "We're no strangers to love..."
+                      language: 'en'
+                      timestamp: '2025-09-27T10:30:00Z'
+                      metadata:
+                        videoId: 'dQw4w9WgXcQ'
+                        duration: 212
+                        availableLanguages: ['en', 'ko', 'ja']
+                        hasTimestamps: true
+                        extractionMethod: 'youtube-api'
+                        processingTime: 1250
+                        contentLength: 2048
+                    processingTime: 1250
+                    timestamp: '2025-09-27T10:30:00Z'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                invalid_url:
+                  summary: Invalid URL format
+                  value:
+                    success: false
+                    error:
+                      code: 'INVALID_URL'
+                      message: '올바른 URL 형식이 아닙니다.'
+                      details: 'URL must be a valid HTTP/HTTPS URL'
+                      retryable: false
+                    processingTime: 50
+                    timestamp: '2025-09-27T10:30:00Z'
+        '404':
+          description: Content not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                not_found:
+                  summary: Content not accessible
+                  value:
+                    success: false
+                    error:
+                      code: 'CONTENT_NOT_FOUND'
+                      message: '콘텐츠를 찾을 수 없거나 접근할 수 없습니다.'
+                      details: 'Video may be private or deleted'
+                      retryable: false
+                    processingTime: 800
+                    timestamp: '2025-09-27T10:30:00Z'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                rate_limited:
+                  summary: API quota exceeded
+                  value:
+                    success: false
+                    error:
+                      code: 'RATE_LIMITED'
+                      message: 'API 사용량 한도를 초과했습니다. 잠시 후 다시 시도해주세요.'
+                      details: 'YouTube API quota exceeded'
+                      retryable: true
+                    processingTime: 100
+                    timestamp: '2025-09-27T10:30:00Z'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/validate:
+    post:
+      summary: Validate URL
+      description: Validates if the provided URL is supported and accessible
+      operationId: validateUrl
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - url
+              properties:
+                url:
+                  type: string
+                  format: uri
+                  description: URL to validate
+      responses:
+        '200':
+          description: URL validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResponse'
+
+  /api/health:
+    get:
+      summary: Health check
+      description: Check API health status
+      operationId: healthCheck
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: 'healthy'
+                  timestamp:
+                    type: string
+                    format: date-time
+                  version:
+                    type: string
+                    example: '1.0.0'
+
+components:
+  schemas:
+    ExtractionRequest:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          format: uri
+          description: URL to extract content from
+          example: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+        options:
+          type: object
+          description: Extraction options
+          properties:
+            language:
+              type: string
+              description: Preferred language for YouTube subtitles
+              example: 'ko'
+            includeTimestamps:
+              type: boolean
+              description: Include timestamps in YouTube subtitles
+              default: false
+            format:
+              type: string
+              enum: ['plain', 'markdown']
+              description: Output format
+              default: 'plain'
+
+    ExtractionResponse:
+      type: object
+      required:
+        - success
+        - processingTime
+        - timestamp
+      properties:
+        success:
+          type: boolean
+          description: Whether extraction was successful
+        data:
+          $ref: '#/components/schemas/ExtractedContent'
+        error:
+          $ref: '#/components/schemas/ExtractionError'
+        processingTime:
+          type: number
+          description: Processing time in milliseconds
+        timestamp:
+          type: string
+          format: date-time
+          description: Response timestamp
+
+    ExtractedContent:
+      type: object
+      required:
+        - id
+        - sourceUrl
+        - sourceType
+        - title
+        - content
+        - timestamp
+        - metadata
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the extracted content
+        sourceUrl:
+          type: string
+          format: uri
+          description: Original source URL
+        sourceType:
+          type: string
+          enum: ['youtube', 'naver']
+          description: Type of content source
+        title:
+          type: string
+          description: Content title
+        content:
+          type: string
+          description: Extracted text content
+        language:
+          type: string
+          description: Content language (for YouTube subtitles)
+        timestamp:
+          type: string
+          format: date-time
+          description: Extraction timestamp
+        metadata:
+          $ref: '#/components/schemas/ContentMetadata'
+
+    ContentMetadata:
+      type: object
+      required:
+        - extractionMethod
+        - processingTime
+        - contentLength
+      properties:
+        # YouTube specific
+        videoId:
+          type: string
+          description: YouTube video ID
+        duration:
+          type: number
+          description: Video duration in seconds
+        availableLanguages:
+          type: array
+          items:
+            type: string
+          description: Available subtitle languages
+        hasTimestamps:
+          type: boolean
+          description: Whether timestamps are included
+
+        # Naver blog specific
+        blogId:
+          type: string
+          description: Naver blog ID
+        postId:
+          type: string
+          description: Blog post ID
+        author:
+          type: string
+          description: Blog post author
+        publishDate:
+          type: string
+          format: date-time
+          description: Blog post publish date
+
+        # Common
+        extractionMethod:
+          type: string
+          description: Method used for extraction
+        processingTime:
+          type: number
+          description: Processing time in milliseconds
+        contentLength:
+          type: number
+          description: Length of extracted content
+
+    ExtractionError:
+      type: object
+      required:
+        - code
+        - message
+        - retryable
+      properties:
+        code:
+          type: string
+          enum:
+            - 'INVALID_URL'
+            - 'UNSUPPORTED_PLATFORM'
+            - 'CONTENT_NOT_FOUND'
+            - 'NO_SUBTITLES'
+            - 'EXTRACTION_FAILED'
+            - 'TIMEOUT'
+            - 'RATE_LIMITED'
+          description: Error code
+        message:
+          type: string
+          description: User-friendly error message
+        details:
+          type: string
+          description: Detailed error information for debugging
+        retryable:
+          type: boolean
+          description: Whether the request can be retried
+
+    ValidationResponse:
+      type: object
+      required:
+        - valid
+        - type
+      properties:
+        valid:
+          type: boolean
+          description: Whether the URL is valid and supported
+        type:
+          type: string
+          enum: ['youtube', 'naver', 'unknown']
+          description: Detected URL type
+        normalizedUrl:
+          type: string
+          format: uri
+          description: Normalized URL (if valid)
+        reason:
+          type: string
+          description: Reason for validation failure (if invalid)
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication (if required)
+
+security:
+  - ApiKeyAuth: []
+  - {} # Allow unauthenticated access
+
+tags:
+  - name: extraction
+    description: Content extraction operations
+  - name: validation
+    description: URL validation operations
+  - name: health
+    description: Health check operations

@@ -1,0 +1,25 @@
+# textify Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2025-09-27
+
+## Active Technologies
+- TypeScript 5.x (엄격 모드) + React 19.1.1, Hono 4.9.9, TanStack Router 1.132.7, Tailwind CSS 4.1.13, Zod 4.1.11 (002-build-a-content)
+
+## Project Structure
+```
+backend/
+frontend/
+tests/
+```
+
+## Commands
+npm test [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLOGIES] npm run lint
+
+## Code Style
+TypeScript 5.x (엄격 모드): Follow standard conventions
+
+## Recent Changes
+- 002-build-a-content: Added TypeScript 5.x (엄격 모드) + React 19.1.1, Hono 4.9.9, TanStack Router 1.132.7, Tailwind CSS 4.1.13, Zod 4.1.11
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
