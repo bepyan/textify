@@ -6,8 +6,7 @@
     "dev": "concurrently \"bun run dev:frontend && cd ..\" \"bun run dev:server\"",
     "dev:frontend": "cd frontend && bun run dev && cd ..",
     "dev:server": "bun run --hot server/index.ts",
-    "build": "cd frontend && bun run build && cd ..",
-    "serve": "bun run server/index.ts"
+    "serve": "NODE_ENV=production bun run server/index.ts"
   },
   "dependencies": {
     "@hono/standard-validator": "^0.1.5",

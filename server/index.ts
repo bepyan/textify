@@ -18,7 +18,7 @@ app.route('/', routes);
 // app.get('*', serveStatic({ path: './frontend/build/client/index.html' }));
 
 export default {
-  port: 1129,
+  port: process.env.PORT || 1129,
   hostname: '0.0.0.0',
   fetch: app.fetch,
 };
