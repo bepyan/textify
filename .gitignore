@@ -1,7 +1,5 @@
-# dependencies (bun install)
+# generated
 node_modules
-
-# output
 out
 dist
 build
@@ -9,7 +7,8 @@ coverage
 *.tgz
 .cache
 *.tsbuildinfo
-.react-router
+.tanstack
+.wrangler
 
 # logs
 logs
@@ -17,9 +16,10 @@ _.log
 report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 
 # env
-.env
-.env.*
-!.env.sample
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
 
 # IDE
 .DS_Store

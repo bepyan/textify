@@ -3,24 +3,34 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"bun run dev:frontend && cd ..\" \"bun run dev:server\"",
-    "dev:frontend": "cd frontend && bun run dev && cd ..",
-    "dev:server": "bun run --hot server/index.ts",
-    "serve": "NODE_ENV=production bun run server/index.ts"
+    "dev": "vite dev",
+    "dev:cf": "wrangler dev",
+    "gen:cf": "wrangler types",
+    "build": "tsc -b && vite build",
+    "deploy": "wrangler deploy"
   },
   "dependencies": {
     "@hono/standard-validator": "^0.1.5",
     "@hono/swagger-ui": "^0.5.2",
+    "@tanstack/react-router": "^1.132.7",
     "hono": "^4.9.9",
     "hono-openapi": "^1.0.8",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "zod": "^4.1.11"
   },
   "devDependencies": {
-    "@types/bun": "latest",
-    "concurrently": "^9.2.1",
+    "@cloudflare/vite-plugin": "^1.13.7",
+    "@tailwindcss/vite": "^4.1.13",
+    "@tanstack/router-plugin": "^1.132.7",
+    "@vitejs/plugin-react-swc": "^4.1.0",
     "prettier": "^3.6.2",
     "prettier-plugin-organize-imports": "^4.3.0",
-    "prettier-plugin-tailwindcss": "^0.6.14"
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "tailwindcss": "^4.1.13",
+    "vite": "^7.1.7",
+    "vite-tsconfig-paths": "^5.1.4",
+    "wrangler": "^4.40.2"
   },
   "peerDependencies": {
     "typescript": "^5"

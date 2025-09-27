@@ -7,7 +7,19 @@
   "css.lint.unknownAtRules": "ignore",
   "tailwindCSS.classFunctions": ["cva", "cn"],
   "typescript.updateImportsOnFileMove.enabled": "always",
-  "workbench.editor.customLabels.patterns": {
-    "**/{layout,page,route,index}.ts{,x}": "${dirname}/${filename}"
+  "files.associations": {
+    "wrangler.json": "jsonc"
+  },
+  "files.readonlyInclude": {
+    "worker-configuration.d.ts": true,
+    "**/routeTree.gen.ts": true
+  },
+  "files.watcherExclude": {
+    "worker-configuration.d.ts": true,
+    "**/routeTree.gen.ts": true
+  },
+  "search.exclude": {
+    "worker-configuration.d.ts": true,
+    "**/routeTree.gen.ts": true
   }
 }

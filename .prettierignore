@@ -1,13 +1,22 @@
 # output
+node_modules
 out
 dist
+build
 coverage
 *.tgz
 .cache
 *.tsbuildinfo
+.tanstack
+.wrangler
+
 *.gen.ts
+worker-configuration.d.ts
 
 # logs
 logs
 _.log
 report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# IDE
+.DS_Store
