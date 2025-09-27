@@ -40,7 +40,7 @@
 **Language/Version**: TypeScript 5.x (엄격 모드), Bun 런타임 환경  
 **Primary Dependencies**: React 19.1.1, Hono 4.9.9 + hono-openapi 1.0.8, TanStack Router 1.132.7, Tailwind CSS 4.1.13, Zod 4.1.11, @hono/swagger-ui 0.5.2  
 **Storage**: 클라이언트 사이드 임시 저장 (세션 기반), 서버 사이드 무상태  
-**Testing**: Vitest + Bun 런타임, React Testing Library, Hono 테스트 유틸리티, Colocation 원칙 (\*.test.ts)  
+**Testing**: Bun native test, React Testing Library, Hono 테스트 유틸리티, Colocation 원칙 (\*.test.ts)  
 **Target Platform**: Cloudflare Workers (통합 서빙), 모든 모던 브라우저 (PWA), Bun 개발 환경
 **Project Type**: web - 통합 Cloudflare Worker (프론트엔드 정적 자산 + Hono API)  
 **Performance Goals**: API 응답 시간 < 3초, LCP < 4초, 번들 크기 최적화  

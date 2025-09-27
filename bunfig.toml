@@ -1,0 +1,14 @@
+# Bun configuration for testing
+[test]
+# Use bun's built-in test runner
+preload = ["./test-setup.ts"]
+
+# Test file patterns - Only unit tests (.ts), no React component tests (.tsx)
+include = ["**/*.test.ts"]
+exclude = ["node_modules/**", "dist/**"]
+
+# Coverage settings
+coverage = true
+
+# Timeout settings
+timeout = 5000

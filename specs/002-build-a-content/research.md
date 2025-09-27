@@ -140,7 +140,7 @@
 
 - Bun: 고성능 JavaScript 런타임 및 패키지 매니저
 - Vite: 빠른 개발 서버 및 번들러
-- Vitest + Bun: 빠른 테스트 실행 (Unit + Integration)
+- Bun native test: 빠른 테스트 실행 (Unit + Integration)
 - React Testing Library: 컴포넌트 테스트
 - Prettier: 코드 포맷팅
 - TypeScript 5.x: 엄격한 타입 안전성

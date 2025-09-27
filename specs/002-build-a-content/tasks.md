@@ -12,9 +12,9 @@
 2. Load design documents:
    → data-model.md: 8 entities (URL, ExtractedContent, ContentMetadata, etc.)
    → contracts/: 3 API endpoints (/api/extract, /api/validate, /api/health)
-   → research.md: YouTube API, Naver 스크래핑, Vitest + Bun 테스트
+   → research.md: YouTube API, Naver 스크래핑, Bun native test
 3. Generate tasks by category:
-   → Setup: Bun 프로젝트, 의존성, 린팅, Vitest 설정
+   → Setup: Bun 프로젝트, 의존성, 린팅, Bun test 설정
    → Tests: API 계약 테스트, 통합 테스트 (colocation)
    → Core: 타입 정의, 추출기, 서비스, API 라우트
    → Integration: Hono 라우팅, 정적 자산 서빙
@@ -47,7 +47,7 @@ Based on plan.md structure:
 - [x] T001 Create project structure per implementation plan with colocation test structure
 - [x] T002 Initialize Bun project with TypeScript 5.x strict mode and all dependencies
 - [ ] T003 [P] Configure Prettier + ESLint with organize imports plugin in .eslintrc.js **[NEXT PRIORITY]**
-- [ ] T004 [P] Configure Vitest with Bun runtime in vitest.config.ts **[NEXT PRIORITY]**
+- [ ] T004 [P] Configure Bun native test with TypeScript support **[NEXT PRIORITY]**
 - [ ] T005 [P] Setup Tailwind CSS 4.1.13 configuration in tailwind.config.js **[NEXT PRIORITY]**
 - [x] T006 [P] Configure Vite with React SWC and TanStack Router plugin in vite.config.ts
 - [x] T007 [P] Setup Wrangler configuration for Cloudflare Workers in wrangler.json
@@ -178,7 +178,7 @@ bun test src/frontend/utils/url-parser.test.ts # T011
 bun test src/frontend/utils/text-cleaner.test.ts # T012
 bun test src/worker/lib/extractors/youtube.test.ts # T013
 bun test src/worker/lib/extractors/naver.test.ts # T014
-# ... all other test files
+# ... all other test files (using bun native test runner)
 ```
 
 ### Phase 3.3 - Parallel Implementation Groups
@@ -254,7 +254,7 @@ _Applied during main() execution_
 4. **From Research** (research.md):
    - YouTube Data API → YouTube extractor (T028)
    - Naver HTML parsing → Naver extractor (T029)
-   - Vitest + Bun → test configuration (T004)
+   - Bun native test → test configuration (T004)
 
 ## Validation Checklist
 
