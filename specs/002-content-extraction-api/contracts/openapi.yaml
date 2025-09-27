@@ -1,0 +1,661 @@
+openapi: 3.1.0
+info:
+  title: Content Extraction API
+  description: |
+    Cloudflare Workers 기반 콘텐츠 추출 API입니다.
+    YouTube와 네이버 블로그에서 메타데이터와 콘텐츠를 추출합니다.
+  version: 1.0.0
+  contact:
+    name: Textify API Support
+    url: https://textify.bepyan.me
+servers:
+  - url: https://textify.bepyan.me/api
+    description: Production server
+  - url: http://localhost:8787/api
+    description: Development server
+
+paths:
+  /extract/youtube:
+    post:
+      summary: YouTube 콘텐츠 추출
+      description: YouTube URL에서 비디오 메타데이터를 추출합니다.
+      operationId: extractYouTube
+      tags:
+        - Content Extraction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtractionRequest'
+            examples:
+              youtube_video:
+                summary: YouTube 비디오 URL
+                value:
+                  url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                  options:
+                    includeTags: true
+                    timeout: 5000
+      responses:
+        '200':
+          description: 추출 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ExtractionResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/YouTubeContent'
+              examples:
+                success:
+                  summary: 성공적인 YouTube 추출
+                  value:
+                    success: true
+                    data:
+                      id: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
+                      platform: "youtube"
+                      url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                      title: "Rick Astley - Never Gonna Give You Up"
+                      extractedAt: 1727432200000
+                      status: "success"
+                      videoId: "dQw4w9WgXcQ"
+                      description: "The official video for Rick Astley's..."
+                      thumbnailUrl: "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+                      channelName: "Rick Astley"
+                      channelId: "UCuAXFkgsw1L7xaCfnd5JJOw"
+                      uploadDate: 1256428800000
+                      duration: "PT3M33S"
+                      viewCount: 1500000000
+                      likeCount: 15000000
+                      tags: ["rick astley", "never gonna give you up", "80s"]
+                    metadata:
+                      requestId: "req_123456789"
+                      processingTime: 2500
+                      platform: "youtube"
+                      extractedFields: ["title", "description", "thumbnailUrl", "channelName", "uploadDate", "duration", "viewCount", "likeCount", "tags"]
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/Timeout'
+
+  /extract/naver-blog:
+    post:
+      summary: 네이버 블로그 콘텐츠 추출
+      description: 네이버 블로그 URL에서 포스트 내용을 추출합니다.
+      operationId: extractNaverBlog
+      tags:
+        - Content Extraction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtractionRequest'
+            examples:
+              naver_blog:
+                summary: 네이버 블로그 포스트 URL
+                value:
+                  url: "https://blog.naver.com/example_user/123456789"
+                  options:
+                    includeImages: true
+                    maxContentLength: 30720
+      responses:
+        '200':
+          description: 추출 성공
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ExtractionResponse'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/NaverBlogContent'
+              examples:
+                success:
+                  summary: 성공적인 네이버 블로그 추출
+                  value:
+                    success: true
+                    data:
+                      id: "b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7"
+                      platform: "naver_blog"
+                      url: "https://blog.naver.com/example_user/123456789"
+                      title: "맛있는 파스타 레시피"
+                      extractedAt: 1727432200000
+                      status: "success"
+                      postId: "123456789"
+                      content: "오늘은 간단하면서도 맛있는 파스타 레시피를 소개해드릴게요..."
+                      authorName: "요리하는 사람"
+                      authorId: "example_user"
+                      publishDate: 1727364000000
+                      category: "요리"
+                      imageUrls: ["https://blogfiles.naver.net/example1.jpg", "https://blogfiles.naver.net/example2.jpg"]
+                      summary: "오늘은 간단하면서도 맛있는 파스타 레시피를 소개해드릴게요. 재료도 간단하고 만들기도 쉬워서 누구나 따라할 수 있어요."
+                    metadata:
+                      requestId: "req_987654321"
+                      processingTime: 3200
+                      platform: "naver_blog"
+                      extractedFields: ["title", "content", "authorName", "publishDate", "category", "imageUrls"]
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/Timeout'
+
+  /extract/auto:
+    post:
+      summary: 자동 플랫폼 감지 및 콘텐츠 추출
+      description: |
+        URL을 자동으로 분석하여 적절한 플랫폼을 감지하고 콘텐츠를 추출합니다.
+        현재 YouTube와 네이버 블로그를 지원합니다.
+      operationId: extractAuto
+      tags:
+        - Content Extraction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExtractionRequest'
+            examples:
+              auto_youtube:
+                summary: YouTube URL 자동 감지
+                value:
+                  url: "https://youtu.be/dQw4w9WgXcQ"
+              auto_naver:
+                summary: 네이버 블로그 URL 자동 감지
+                value:
+                  url: "https://blog.naver.com/example_user/123456789"
+      responses:
+        '200':
+          description: 추출 성공
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtractionResponse'
+              examples:
+                youtube_auto:
+                  summary: YouTube 자동 추출 결과
+                  value:
+                    success: true
+                    data:
+                      id: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
+                      platform: "youtube"
+                      url: "https://youtu.be/dQw4w9WgXcQ"
+                      title: "Rick Astley - Never Gonna Give You Up"
+                      extractedAt: 1727432200000
+                      status: "success"
+                      videoId: "dQw4w9WgXcQ"
+                      description: "The official video for Rick Astley's..."
+                      thumbnailUrl: "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg"
+                      channelName: "Rick Astley"
+                      channelId: "UCuAXFkgsw1L7xaCfnd5JJOw"
+                      uploadDate: 1256428800000
+                      duration: "PT3M33S"
+                    metadata:
+                      requestId: "req_auto_123"
+                      processingTime: 2800
+                      platform: "youtube"
+                      extractedFields: ["title", "description", "thumbnailUrl", "channelName", "uploadDate", "duration"]
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+        '504':
+          $ref: '#/components/responses/Timeout'
+
+components:
+  schemas:
+    ExtractionRequest:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          format: uri
+          description: 추출할 콘텐츠의 URL
+          example: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        options:
+          $ref: '#/components/schemas/ExtractionOptions'
+
+    ExtractionOptions:
+      type: object
+      properties:
+        includeImages:
+          type: boolean
+          default: false
+          description: 이미지 URL 포함 여부 (네이버 블로그만 해당)
+        includeTags:
+          type: boolean
+          default: false
+          description: 태그 포함 여부 (YouTube만 해당)
+        maxContentLength:
+          type: integer
+          minimum: 1024
+          maximum: 102400
+          description: 최대 콘텐츠 길이 (바이트)
+        timeout:
+          type: integer
+          minimum: 1000
+          maximum: 30000
+          default: 5000
+          description: 타임아웃 (밀리초)
+
+    ExtractionResponse:
+      type: object
+      required:
+        - success
+        - metadata
+      properties:
+        success:
+          type: boolean
+          description: 추출 성공 여부
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/YouTubeContent'
+            - $ref: '#/components/schemas/NaverBlogContent'
+          description: 추출된 콘텐츠 데이터 (성공 시만)
+        error:
+          $ref: '#/components/schemas/ExtractionError'
+        metadata:
+          $ref: '#/components/schemas/ResponseMetadata'
+
+    ExtractedContent:
+      type: object
+      required:
+        - id
+        - platform
+        - url
+        - title
+        - extractedAt
+        - status
+      properties:
+        id:
+          type: string
+          minLength: 32
+          maxLength: 32
+          description: 고유 식별자 (URL 해시 기반)
+          example: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
+        platform:
+          $ref: '#/components/schemas/ContentPlatform'
+        url:
+          type: string
+          format: uri
+          description: 원본 URL
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+          description: 콘텐츠 제목
+        extractedAt:
+          type: integer
+          format: int64
+          minimum: 0
+          description: 추출 시간 (JavaScript 타임스탬프, 밀리초)
+        status:
+          $ref: '#/components/schemas/ExtractionStatus'
+
+    YouTubeContent:
+      allOf:
+        - $ref: '#/components/schemas/ExtractedContent'
+        - type: object
+          required:
+            - videoId
+            - description
+            - thumbnailUrl
+            - channelName
+            - channelId
+            - uploadDate
+            - duration
+          properties:
+            platform:
+              type: string
+              enum: [youtube]
+            videoId:
+              type: string
+              minLength: 11
+              maxLength: 11
+              description: YouTube 비디오 ID
+              example: "dQw4w9WgXcQ"
+            description:
+              type: string
+              maxLength: 5120
+              description: 비디오 설명 (최대 5KB)
+            thumbnailUrl:
+              type: string
+              format: uri
+              description: 썸네일 이미지 URL
+            channelName:
+              type: string
+              minLength: 1
+              maxLength: 100
+              description: 채널명
+            channelId:
+              type: string
+              description: YouTube 채널 ID
+            uploadDate:
+              type: integer
+              format: int64
+              minimum: 0
+              description: 업로드 날짜 (JavaScript 타임스탬프, 밀리초)
+            duration:
+              type: string
+              pattern: '^PT(\d+H)?(\d+M)?(\d+S)?$'
+              description: 비디오 길이 (ISO 8601 duration)
+              example: "PT3M33S"
+            viewCount:
+              type: integer
+              minimum: 0
+              description: 조회수 (선택적)
+            likeCount:
+              type: integer
+              minimum: 0
+              description: 좋아요 수 (선택적)
+            tags:
+              type: array
+              maxItems: 20
+              items:
+                type: string
+                minLength: 1
+                maxLength: 50
+              description: 태그 목록 (선택적)
+
+    NaverBlogContent:
+      allOf:
+        - $ref: '#/components/schemas/ExtractedContent'
+        - type: object
+          required:
+            - postId
+            - content
+            - authorName
+            - authorId
+            - publishDate
+          properties:
+            platform:
+              type: string
+              enum: [naver_blog]
+            postId:
+              type: string
+              pattern: '^\d+$'
+              description: 블로그 포스트 ID
+              example: "123456789"
+            content:
+              type: string
+              maxLength: 51200
+              description: 본문 내용 (HTML 태그 제거됨, 최대 50KB)
+            authorName:
+              type: string
+              minLength: 1
+              maxLength: 50
+              description: 작성자명
+            authorId:
+              type: string
+              description: 네이버 사용자 ID
+            publishDate:
+              type: integer
+              format: int64
+              minimum: 0
+              description: 작성일 (JavaScript 타임스탬프, 밀리초)
+            category:
+              type: string
+              minLength: 1
+              maxLength: 30
+              description: 카테고리 (선택적)
+            imageUrls:
+              type: array
+              maxItems: 50
+              items:
+                type: string
+                format: uri
+              description: 이미지 URL 목록 (선택적)
+            summary:
+              type: string
+              maxLength: 200
+              description: 요약 (선택적, 처음 200자)
+
+    ContentPlatform:
+      type: string
+      enum:
+        - youtube
+        - naver_blog
+      description: 콘텐츠 플랫폼 타입
+
+    ExtractionStatus:
+      type: string
+      enum:
+        - success
+        - partial
+        - failed
+      description: |
+        추출 상태:
+        - success: 모든 필수 필드 추출 성공
+        - partial: 일부 필드만 추출 (선택적 필드 실패)
+        - failed: 필수 필드 추출 실패
+
+    ExtractionError:
+      type: object
+      required:
+        - type
+        - message
+        - retryable
+      properties:
+        type:
+          $ref: '#/components/schemas/ExtractionErrorType'
+        message:
+          type: string
+          description: 사용자 친화적 에러 메시지
+        details:
+          type: string
+          description: 상세 에러 정보 (선택적)
+        retryable:
+          type: boolean
+          description: 재시도 가능 여부
+
+    ExtractionErrorType:
+      type: string
+      enum:
+        - INVALID_URL
+        - UNSUPPORTED_PLATFORM
+        - NETWORK_ERROR
+        - PARSING_ERROR
+        - CONTENT_NOT_FOUND
+        - RATE_LIMITED
+        - TIMEOUT
+        - CONTENT_TOO_LARGE
+        - ACCESS_DENIED
+      description: |
+        에러 타입:
+        - INVALID_URL: 유효하지 않은 URL
+        - UNSUPPORTED_PLATFORM: 지원하지 않는 플랫폼
+        - NETWORK_ERROR: 네트워크 오류
+        - PARSING_ERROR: 파싱 오류
+        - CONTENT_NOT_FOUND: 콘텐츠를 찾을 수 없음
+        - RATE_LIMITED: 요청 한도 초과
+        - TIMEOUT: 타임아웃
+        - CONTENT_TOO_LARGE: 콘텐츠 크기 초과
+        - ACCESS_DENIED: 접근 거부
+
+    ResponseMetadata:
+      type: object
+      required:
+        - requestId
+        - processingTime
+        - platform
+        - extractedFields
+      properties:
+        requestId:
+          type: string
+          description: 요청 고유 ID
+          example: "req_123456789"
+        processingTime:
+          type: integer
+          minimum: 0
+          description: 처리 시간 (밀리초)
+        platform:
+          $ref: '#/components/schemas/ContentPlatform'
+        extractedFields:
+          type: array
+          items:
+            type: string
+          description: 성공적으로 추출된 필드 목록
+
+  responses:
+    BadRequest:
+      description: 잘못된 요청
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ExtractionResponse'
+              - type: object
+                properties:
+                  success:
+                    type: boolean
+                    enum: [false]
+          examples:
+            invalid_url:
+              summary: 유효하지 않은 URL
+              value:
+                success: false
+                error:
+                  type: "INVALID_URL"
+                  message: "제공된 URL이 유효하지 않습니다."
+                  retryable: false
+                metadata:
+                  requestId: "req_error_123"
+                  processingTime: 50
+                  platform: "unknown"
+                  extractedFields: []
+            unsupported_platform:
+              summary: 지원하지 않는 플랫폼
+              value:
+                success: false
+                error:
+                  type: "UNSUPPORTED_PLATFORM"
+                  message: "현재 지원하지 않는 플랫폼입니다. YouTube 또는 네이버 블로그 URL을 사용해주세요."
+                  retryable: false
+                metadata:
+                  requestId: "req_error_456"
+                  processingTime: 100
+                  platform: "unknown"
+                  extractedFields: []
+
+    NotFound:
+      description: 콘텐츠를 찾을 수 없음
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ExtractionResponse'
+              - type: object
+                properties:
+                  success:
+                    type: boolean
+                    enum: [false]
+          example:
+            success: false
+            error:
+              type: "CONTENT_NOT_FOUND"
+              message: "요청한 콘텐츠를 찾을 수 없습니다. URL을 확인해주세요."
+              retryable: false
+            metadata:
+              requestId: "req_notfound_789"
+              processingTime: 1500
+              platform: "youtube"
+              extractedFields: []
+
+    RateLimited:
+      description: 요청 한도 초과
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ExtractionResponse'
+              - type: object
+                properties:
+                  success:
+                    type: boolean
+                    enum: [false]
+          example:
+            success: false
+            error:
+              type: "RATE_LIMITED"
+              message: "요청 한도를 초과했습니다. 잠시 후 다시 시도해주세요."
+              retryable: true
+            metadata:
+              requestId: "req_ratelimit_101"
+              processingTime: 10
+              platform: "youtube"
+              extractedFields: []
+
+    InternalServerError:
+      description: 내부 서버 오류
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ExtractionResponse'
+              - type: object
+                properties:
+                  success:
+                    type: boolean
+                    enum: [false]
+          example:
+            success: false
+            error:
+              type: "PARSING_ERROR"
+              message: "콘텐츠 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."
+              retryable: true
+            metadata:
+              requestId: "req_error_500"
+              processingTime: 4500
+              platform: "naver_blog"
+              extractedFields: []
+
+    Timeout:
+      description: 요청 시간 초과
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ExtractionResponse'
+              - type: object
+                properties:
+                  success:
+                    type: boolean
+                    enum: [false]
+          example:
+            success: false
+            error:
+              type: "TIMEOUT"
+              message: "요청 처리 시간이 초과되었습니다. 다시 시도해주세요."
+              retryable: true
+            metadata:
+              requestId: "req_timeout_504"
+              processingTime: 5000
+              platform: "youtube"
+              extractedFields: []
+
+  securitySchemes: {}
+
+tags:
+  - name: Content Extraction
+    description: 콘텐츠 추출 관련 API

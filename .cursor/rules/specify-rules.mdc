@@ -1,0 +1,25 @@
+# textify Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2025-09-28
+
+## Active Technologies
+- TypeScript 5.x (Cloudflare Workers 런타임) + Hono 4.9.9 (기존 웹 프레임워크), @hono/standard-validator (검증), hono-openapi (API 문서화), HTML 파싱 라이브러리 (추가 필요) (002-content-extraction-api)
+
+## Project Structure
+```
+backend/
+frontend/
+tests/
+```
+
+## Commands
+npm test [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLOGIES] npm run lint
+
+## Code Style
+TypeScript 5.x (Cloudflare Workers 런타임): Follow standard conventions
+
+## Recent Changes
+- 002-content-extraction-api: Added TypeScript 5.x (Cloudflare Workers 런타임) + Hono 4.9.9 (기존 웹 프레임워크), @hono/standard-validator (검증), hono-openapi (API 문서화), HTML 파싱 라이브러리 (추가 필요)
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->
