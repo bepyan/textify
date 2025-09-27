@@ -116,11 +116,11 @@ _GATE: Automated checks run during main() execution_
 
 ### Constitution Alignment
 
-- [ ] Performance requirements specified (response times, load capacity)
-- [ ] Accessibility requirements included (WCAG 2.1 AA compliance)
-- [ ] User experience consistency considerations
-- [ ] Error handling and edge cases documented
-- [ ] Observability requirements (logging, monitoring) identified
+- [ ] 합리적인 성능 요구사항 명시 (개인 프로젝트 수준)
+- [ ] 접근성 요구사항 포함 (가능한 범위 내에서)
+- [ ] 사용자 경험 일관성 고려사항
+- [ ] 에러 처리 및 엣지 케이스 문서화
+- [ ] 기본적인 관찰 가능성 요구사항 (로깅, 모니터링) 식별
 
 ---
 

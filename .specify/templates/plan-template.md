@@ -55,15 +55,15 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 - [ ] TypeScript 엄격 모드 활성화 확인
 - [ ] ESLint/Prettier 설정 구성
-- [ ] 함수/파일 크기 제한 준수 계획
+- [ ] 유틸 함수 순수성 및 단일 책임 원칙 준수 계획
 - [ ] 네이밍 컨벤션 적용 방안
 
 ### Testing Requirements
 
-- [ ] TDD 접근법 적용 계획
-- [ ] 80% 코드 커버리지 목표 설정
-- [ ] 테스트 계층 구조 (단위/통합/E2E) 정의
-- [ ] API contract 테스트 계획
+- [ ] TDD 접근법 적용 계획 (권장)
+- [ ] 핵심 기능 테스트 커버리지 계획 (60% 이상 권장)
+- [ ] 핵심 비즈니스 로직 및 유틸 함수 테스트 필수
+- [ ] API contract 테스트 계획 (권장)
 
 ### UX Consistency
 
@@ -74,17 +74,17 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### Performance Standards
 
-- [ ] 프론트엔드 성능 목표 설정 (LCP < 2.5s, FID < 100ms)
-- [ ] 백엔드 응답 시간 목표 (95th percentile < 200ms)
-- [ ] 번들 크기 최적화 계획
-- [ ] 성능 모니터링 방안
+- [ ] 프론트엔드 성능 목표 설정 (LCP < 4s 목표, 합리적 수준)
+- [ ] 백엔드 응답 시간 목표 (평균 < 500ms, 개인 서버 환경 고려)
+- [ ] 번들 크기 최적화 계획 (필요시 적용)
+- [ ] 기본적인 성능 모니터링 방안
 
 ### Observability
 
-- [ ] 구조화된 로깅 계획
-- [ ] 에러 추적 시스템 구성
-- [ ] 성능 메트릭 수집 방안
-- [ ] 모니터링 대시보드 설계
+- [ ] 기본적인 로깅 계획 (에러 및 중요 이벤트)
+- [ ] 간단한 에러 추적 방안
+- [ ] 개발 환경 디버깅 도구 활용 계획
+- [ ] 최소한의 프로덕션 모니터링 방안
 
 ## Project Structure
 
@@ -267,4 +267,4 @@ _This checklist is updated during execution flow_
 
 ---
 
-_Based on Constitution v1.0.0 - See `.specify/memory/constitution.md`_
+_Based on Constitution v1.1.0 - See `.specify/memory/constitution.md`_
