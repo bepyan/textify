@@ -3,7 +3,7 @@ import { useRender } from '@base-ui-components/react/use-render';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { ChevronDown, type LucideIcon } from 'lucide-react';
 
-import { cn } from '~/lib/utils';
+import { cn } from '@fe/lib/utils';
 
 const buttonVariants = cva(
   'group ring-offset-background inline-flex cursor-pointer items-center justify-center text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-60 has-data-[arrow=true]:justify-between [&_svg]:shrink-0',

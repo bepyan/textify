@@ -1,7 +1,7 @@
 import { type VariantProps } from 'class-variance-authority';
 
-import { Button, type buttonVariants } from '~/components/ui/button';
-import { cn } from '~/lib/utils';
+import { Button, type buttonVariants } from '@fe/components/ui/button';
+import { cn } from '@fe/lib/utils';
 
 export type PromptSuggestionProps = {
   children: React.ReactNode;

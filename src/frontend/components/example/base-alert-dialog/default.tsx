@@ -8,8 +8,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '~/components/ui/base-alert-dialog';
-import { Button } from '~/components/ui/button';
+} from '@fe/components/ui/base-alert-dialog';
+import { Button } from '@fe/components/ui/button';
 
 export default function BaseAlertDialogDefault() {
   return (

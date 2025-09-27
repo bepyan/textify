@@ -5,8 +5,8 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { Alert, AlertIcon, AlertTitle } from '~/components/ui/alert';
-import { Button } from '~/components/ui/base-button';
+import { Alert, AlertIcon, AlertTitle } from '@fe/components/ui/alert';
+import { Button } from '@fe/components/ui/base-button';
 import {
   Dialog,
   DialogClose,
@@ -16,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '~/components/ui/base-dialog';
+} from '@fe/components/ui/base-dialog';
 import {
   Form,
   FormControl,
@@ -25,8 +25,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '~/components/ui/base-form';
-import { Textarea } from '~/components/ui/textarea';
+} from '@fe/components/ui/base-form';
+import { Textarea } from '@fe/components/ui/textarea';
 
 export default function BaseDialogDefault() {
   const [open, setOpen] = useState(false);

@@ -6,8 +6,8 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from '~/components/ui/hover-card';
-import { cn } from '~/lib/utils';
+} from '@fe/components/ui/hover-card';
+import { cn } from '@fe/lib/utils';
 
 const SourceContext = createContext<{
   href: string;

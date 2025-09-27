@@ -64,7 +64,7 @@ export default defineConfig(
       import: importPlugin,
     },
     settings: {
-      'import/internal-regex': '^~/',
+      'import/internal-regex': '^(@fe|@be)/',
     },
     rules: {
       'import/order': [

@@ -1,8 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { LogoIcon } from '~/components/icons';
-import { TextifyPromptInput } from '~/components/textify-prompt-input';
-import { Skeleton } from '~/components/ui/skeleton';
+import { LogoIcon } from '@fe/components/icons';
+import { TextifyPromptInput } from '@fe/components/textify-prompt-input';
+import { Skeleton } from '@fe/components/ui/skeleton';
 
 export const Route = createFileRoute('/')({
   component: Page,

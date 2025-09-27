@@ -2,7 +2,7 @@
 
 import { cva, type VariantProps } from 'class-variance-authority';
 
-import { cn } from '~/lib/utils';
+import { cn } from '@fe/lib/utils';
 
 const labelVariants = cva(
   'text-foreground text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-50',

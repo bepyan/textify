@@ -2,10 +2,10 @@
 
 import { Settings } from 'lucide-react';
 
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@fe/components/ui/avatar';
 // Assuming you have Avatar components
-import { Badge } from '~/components/ui/badge'; // Assuming you have a Badge component
-import { Button } from '~/components/ui/button';
+import { Badge } from '@fe/components/ui/badge'; // Assuming you have a Badge component
+import { Button } from '@fe/components/ui/button';
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import {
   CardHeading,
   CardTitle,
   CardToolbar,
-} from '~/components/ui/card';
+} from '@fe/components/ui/card';
 
 // User data
 const users = [

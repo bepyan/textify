@@ -1,6 +1,6 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 
-import { Gnb } from '~/components/gnb';
+import { Gnb } from '@fe/components/gnb';
 
 const RootLayout = () => (
   <div className="text-foreground bg-background isolate font-sans antialiased">

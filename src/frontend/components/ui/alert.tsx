@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import { X } from 'lucide-react';
 
-import { cn } from '~/lib/utils';
+import { cn } from '@fe/lib/utils';
 
 const alertVariants = cva(
   'flex w-full items-stretch gap-2 group-[.toaster]:w-(--width)',

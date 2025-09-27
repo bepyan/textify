@@ -1,5 +1,6 @@
 {
   "files": [],
+  "extends": "./tsconfig.path.json",
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" },
@@ -10,10 +11,6 @@
       "./worker-configuration.d.ts",
       "node",
       "@vitest/browser/providers/playwright"
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "~/*": ["src/frontend/*"]
-    }
+    ]
   }
 }

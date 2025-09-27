@@ -3,15 +3,15 @@
 import { ArrowUp } from 'lucide-react';
 import { useState } from 'react';
 
-import { Button } from '~/components/ui/button';
+import { Button } from '@fe/components/ui/button';
 import {
   PromptInput,
   PromptInputAction,
   PromptInputActions,
   PromptInputTextarea,
-} from '~/components/ui/prompt-input';
-import { PromptSuggestion } from '~/components/ui/prompt-suggestion';
-import { cn } from '~/lib/utils';
+} from '@fe/components/ui/prompt-input';
+import { PromptSuggestion } from '@fe/components/ui/prompt-suggestion';
+import { cn } from '@fe/lib/utils';
 
 const howToPrompts = [
   'https://youtube.com/watch?v=utImgpthqoo',

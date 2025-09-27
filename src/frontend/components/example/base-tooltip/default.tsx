@@ -1,12 +1,12 @@
 import { Info } from 'lucide-react';
 
-import { Button } from '~/components/ui/base-button';
+import { Button } from '@fe/components/ui/base-button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '~/components/ui/base-tooltip';
+} from '@fe/components/ui/base-tooltip';
 
 export default function BaseTooltipDemo() {
   return (
