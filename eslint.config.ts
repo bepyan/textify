@@ -1,11 +1,11 @@
 import { fileURLToPath } from 'node:url';
 
-import globals from 'globals';
 import { includeIgnoreFile } from '@eslint/compat';
 import js from '@eslint/js';
 import routerPlugin from '@tanstack/eslint-plugin-router';
 import { defineConfig } from 'eslint/config';
 import importPlugin from 'eslint-plugin-import';
+import globals from 'globals';
 import ts from 'typescript-eslint';
 
 const gitignorePath = fileURLToPath(new URL('.gitignore', import.meta.url));
