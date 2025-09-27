@@ -47,8 +47,8 @@ Based on plan.md structure:
 - [x] T001 Create project structure per implementation plan with colocation test structure
 - [x] T002 Initialize Bun project with TypeScript 5.x strict mode and all dependencies
 - [x] T003 [P] Configure Prettier + ESLint with organize imports plugin using ESLint flat config **[COMPLETED]**
-- [ ] T004 [P] Configure Bun native test with TypeScript support **[NEXT PRIORITY]**
-- [ ] T005 [P] Setup Tailwind CSS 4.1.13 configuration in tailwind.config.js **[NEXT PRIORITY]**
+- [x] T004 [P] Configure Bun native test with TypeScript support **[COMPLETED]**
+- [x] T005 [P] Setup Tailwind CSS 4.1.13 configuration in tailwind.config.js **[COMPLETED]**
 - [x] T006 [P] Configure Vite with React SWC and TanStack Router plugin in vite.config.ts
 - [x] T007 [P] Setup Wrangler configuration for Cloudflare Workers in wrangler.json
 
@@ -59,29 +59,29 @@ Based on plan.md structure:
 
 ### API Contract Tests (Colocation)
 
-- [ ] T008 [P] Contract test POST /api/extract in src/worker/routes/api.test.ts
-- [ ] T009 [P] Contract test POST /api/validate in src/worker/routes/api.test.ts
-- [ ] T010 [P] Contract test GET /api/health in src/worker/routes/index.test.ts
+- [x] T008 [P] Contract test POST /api/extract in src/worker/routes/api.test.ts **[COMPLETED]**
+- [x] T009 [P] Contract test POST /api/validate in src/worker/routes/api.test.ts **[COMPLETED]**
+- [x] T010 [P] Contract test GET /api/health in src/worker/routes/index.test.ts **[COMPLETED]**
 
 ### Core Logic Tests (Colocation)
 
-- [ ] T011 [P] URL parser unit tests in src/frontend/utils/url-parser.test.ts
-- [ ] T012 [P] Text cleaner unit tests in src/frontend/utils/text-cleaner.test.ts
-- [ ] T013 [P] YouTube extractor unit tests in src/worker/lib/extractors/youtube.test.ts
-- [ ] T014 [P] Naver extractor unit tests in src/worker/lib/extractors/naver.test.ts
-- [ ] T015 [P] Zod schema validation tests in src/worker/lib/validators/schemas.test.ts
-- [ ] T016 [P] HTML parser utility tests in src/worker/lib/utils/html-parser.test.ts
+- [x] T011 [P] URL parser unit tests in src/frontend/utils/url-parser.test.ts **[ALREADY EXISTS]**
+- [x] T012 [P] Text cleaner unit tests in src/frontend/utils/text-cleaner.test.ts **[ALREADY EXISTS]**
+- [x] T013 [P] YouTube extractor unit tests in src/worker/lib/extractors/youtube.test.ts **[COMPLETED]**
+- [x] T014 [P] Naver extractor unit tests in src/worker/lib/extractors/naver.test.ts **[COMPLETED]**
+- [x] T015 [P] Zod schema validation tests in src/worker/lib/validators/schemas.test.ts **[COMPLETED]**
+- [x] T016 [P] HTML parser utility tests in src/worker/lib/utils/html-parser.test.ts **[COMPLETED]**
 
 ### Integration Tests (Colocation)
 
-- [ ] T017 [P] YouTube extraction integration test in src/frontend/services/youtube.test.ts
-- [ ] T018 [P] Naver extraction integration test in src/frontend/services/naver.test.ts
-- [ ] T019 [P] API client integration test in src/frontend/services/api.test.ts
+- [x] T017 [P] YouTube extraction integration test in src/frontend/services/youtube.test.ts **[COMPLETED]**
+- [x] T018 [P] Naver extraction integration test in src/frontend/services/naver.test.ts **[COMPLETED]**
+- [x] T019 [P] API client integration test in src/frontend/services/api.test.ts **[COMPLETED]**
 
 ### Component Tests (Colocation)
 
-- [ ] T020 [P] Content extractor component test in src/frontend/components/content-extractor/extractor.test.tsx
-- [ ] T021 [P] UI button component test in src/frontend/components/ui/button.test.tsx
+- [x] T020 [P] Content extractor component test in src/frontend/components/content-extractor/extractor.test.tsx **[COMPLETED]**
+- [x] T021 [P] UI button component test in src/frontend/components/ui/button.test.tsx **[COMPLETED]**
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
 
@@ -89,23 +89,23 @@ Based on plan.md structure:
 
 ### Type Definitions
 
-- [ ] T022 [P] Core TypeScript interfaces in src/worker/types/index.ts
-- [ ] T023 [P] Frontend TypeScript interfaces in src/frontend/types/index.ts
+- [x] T022 [P] Core TypeScript interfaces in src/worker/types/index.ts **[COMPLETED]**
+- [x] T023 [P] Frontend TypeScript interfaces in src/frontend/types/index.ts **[COMPLETED]**
 
 ### Utility Functions
 
-- [ ] T024 [P] URL parser utility with validation in src/frontend/utils/url-parser.ts
-- [ ] T025 [P] Text cleaner utility functions in src/frontend/utils/text-cleaner.ts
-- [ ] T026 [P] HTML parser utility for Cloudflare Workers in src/worker/lib/utils/html-parser.ts
+- [x] T024 [P] URL parser utility with validation in src/frontend/utils/url-parser.ts **[ALREADY EXISTS]**
+- [x] T025 [P] Text cleaner utility functions in src/frontend/utils/text-cleaner.ts **[ALREADY EXISTS]**
+- [x] T026 [P] HTML parser utility for Cloudflare Workers in src/worker/lib/utils/html-parser.ts **[COMPLETED]**
 
 ### Validation Schemas
 
-- [ ] T027 [P] Zod schemas for API validation in src/worker/lib/validators/schemas.ts
+- [x] T027 [P] Zod schemas for API validation in src/worker/lib/validators/schemas.ts **[COMPLETED]**
 
 ### Content Extractors
 
-- [ ] T028 [P] YouTube extractor with Data API v3 in src/worker/lib/extractors/youtube.ts
-- [ ] T029 [P] Naver blog extractor with HTML parsing in src/worker/lib/extractors/naver.ts
+- [x] T028 [P] YouTube extractor with Data API v3 in src/worker/lib/extractors/youtube.ts **[COMPLETED]**
+- [x] T029 [P] Naver blog extractor with HTML parsing in src/worker/lib/extractors/naver.ts **[COMPLETED]**
 
 ### API Services (Frontend)
 
@@ -121,14 +121,14 @@ Based on plan.md structure:
 
 ### API Routes (Worker)
 
-- [ ] T036 POST /api/extract endpoint with hono-openapi in src/worker/routes/api.ts
-- [ ] T037 POST /api/validate endpoint with URL validation in src/worker/routes/api.ts
-- [ ] T038 GET /api/health endpoint in src/worker/routes/index.ts
+- [x] T036 POST /api/extract endpoint with hono-openapi in src/worker/routes/api.ts **[COMPLETED]**
+- [x] T037 POST /api/validate endpoint with URL validation in src/worker/routes/api.ts **[COMPLETED]**
+- [x] T038 GET /api/health endpoint in src/worker/routes/index.ts **[COMPLETED]**
 
 ### TanStack Router Pages
 
 - [x] T039 [P] Root layout component in src/frontend/routes/\_\_root.tsx
-- [ ] T040 Main extraction page in src/frontend/routes/index.tsx **[CRITICAL - 콘텐츠 추출 UI 구현 필요]**
+- [x] T040 Main extraction page in src/frontend/routes/index.tsx **[COMPLETED - 콘텐츠 추출 UI 구현 완료]**
 - [x] T041 [P] About page in src/frontend/routes/about.tsx
 
 ## Phase 3.4: Integration
