@@ -61,12 +61,13 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 - [ ] 복잡한 조건문 명명된 변수로 분리 계획
 - [ ] 구현 세부사항 추상화 방안
 
-### Testing Requirements
+### Business Logic Testing
 
-- [ ] TDD 접근법 적용 계획
-- [ ] 80% 코드 커버리지 목표 설정
-- [ ] 테스트 계층 구조 (단위/통합/E2E) 정의
+- [ ] TDD 접근법 적용 계획 (비즈니스 로직에 집중)
+- [ ] 테스트 대상 식별: API 엔드포인트, 데이터 처리 로직, 핵심 비즈니스 규칙
+- [ ] 테스트 계층 구조 정의: 단위 테스트 (비즈니스 로직), 통합 테스트 (API), E2E (핵심 플로우)
 - [ ] API contract 테스트 계획
+- [ ] 프론트엔드 컴포넌트 테스트 필요성 검토 (복잡한 상태 로직이 있는 경우만)
 
 ### Frontend Architecture & UX
 
@@ -274,4 +275,4 @@ _This checklist is updated during execution flow_
 
 ---
 
-_Based on Constitution v1.1.0 - See `.specify/memory/constitution.md`_
+_Based on Constitution v1.2.0 - See `.specify/memory/constitution.md`_

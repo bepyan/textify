@@ -1,15 +1,18 @@
 <!--
 Sync Impact Report:
-Version change: 1.0.0 → 1.1.0
+Version change: 1.0.0 → 1.2.0
 Modified principles: 
 - Performance Excellence → Performance & UX Excellence (완화된 성능 요구사항)
-- Observability & Monitoring → Observability (간소화)
+- Test-Driven Development → Business Logic Testing (비즈니스 로직 중심, 80% 커버리지 제거)
+- Observability & Monitoring → Code Organization & Maintainability (간소화)
 Added sections:
 - Frontend Code Quality (frontend-rules 기반)
 - Code Readability Guidelines
 Removed sections:
 - Performance Standards (개인 프로젝트에 과도함)
 - Team-based governance processes
+- 80% 코드 커버리지 요구사항
+- 프론트엔드 컴포넌트 테스트 의무화
 Templates requiring updates: ✅ Updated plan-template.md, spec-template.md, tasks-template.md
 Follow-up TODOs: None
 -->
@@ -33,16 +36,17 @@ Follow-up TODOs: None
 
 코드는 읽기 쉽고 이해하기 쉬워야 하며, 인지 부하를 최소화해야 합니다.
 
-### II. Test-Driven Development (TDD)
+### II. Business Logic Testing (TDD)
 
-테스트 우선 개발은 필수입니다:
+비즈니스 로직에 대한 테스트 우선 개발은 필수입니다:
 
 - 구현 전 테스트 작성 → 실패 확인 → 구현 → 통과 확인 → 리팩토링
-- 최소 80% 코드 커버리지 유지
-- 단위 테스트, 통합 테스트, E2E 테스트 계층별 구성
+- 비즈니스 로직, API 엔드포인트, 데이터 처리 로직에 집중
+- 프론트엔드 컴포넌트 테스트는 선택적 (복잡한 상태 로직이 있는 경우만)
+- 단위 테스트 (비즈니스 로직), 통합 테스트 (API), E2E 테스트 (핵심 사용자 플로우)
 - 모든 API 엔드포인트는 contract 테스트 필수
 
-테스트는 코드의 신뢰성을 보장하고 리팩토링 시 안전망 역할을 합니다.
+테스트는 핵심 비즈니스 로직의 신뢰성을 보장하고 리팩토링 시 안전망 역할을 합니다.
 
 ### III. Frontend Architecture & UX
 
@@ -143,4 +147,4 @@ Follow-up TODOs: None
 - MINOR: 새로운 원칙 추가 또는 기존 원칙 확장
 - PATCH: 명확화, 오타 수정, 비본질적 개선
 
-**Version**: 1.1.0 | **Ratified**: 2025-01-27 | **Last Amended**: 2025-09-27
+**Version**: 1.2.0 | **Ratified**: 2025-01-27 | **Last Amended**: 2025-09-27
