@@ -16,4 +16,7 @@ export default defineConfig({
     tsconfigPaths(),
     cloudflare(),
   ],
+  server: {
+    port: 8787,
+  },
 });

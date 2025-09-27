@@ -30,9 +30,9 @@ app.get('/', (c) => c.json({ name: 'Cloudflaretest' }));
 //   },
 // );
 app.get('/health', (c) => c.text('OK'));
-app.get('/ui', swaggerUI({ url: '/api/doc' }));
+app.get('/docs', swaggerUI({ url: '/api/schema' }));
 app.get(
-  '/doc',
+  '/schema',
   openAPIRouteHandler(app, {
     documentation: {
       info: {
@@ -40,7 +40,10 @@ app.get(
         version: '0.1.0',
         description: 'API Server build with Hono 🔥',
       },
-      servers: [{ url: 'http://localhost:1129/api' }],
+      servers: [
+        { url: 'https://textify.bepyan.me/api' },
+        { url: 'http://localhost:8787/api' },
+      ],
     },
   }),
 );
