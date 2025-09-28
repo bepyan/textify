@@ -8,14 +8,14 @@ import React, {
   useState,
 } from 'react';
 
-import { Textarea } from '~/components/ui/textarea';
+import { Textarea } from '@fe/components/ui/textarea';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '~/components/ui/tooltip';
-import { cn } from '~/lib/utils';
+} from '@fe/components/ui/tooltip';
+import { cn } from '@fe/lib/utils';
 
 type PromptInputContextType = {
   isLoading: boolean;

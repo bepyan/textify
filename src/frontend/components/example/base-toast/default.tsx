@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '~/components/ui/base-button';
-import { useToast } from '~/hooks/use-toast';
+import { Button } from '@fe/components/ui/base-button';
+import { useToast } from '@fe/hooks/use-toast';
 
 export default function ToastDemo() {
   const toast = useToast();

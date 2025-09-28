@@ -3,8 +3,8 @@
 import { AlertDialog as AlertDialogPrimitive } from '@base-ui-components/react/alert-dialog';
 import { X } from 'lucide-react';
 
-import { buttonVariants } from '~/components/ui/base-button';
-import { cn } from '~/lib/utils';
+import { buttonVariants } from '@fe/components/ui/base-button';
+import { cn } from '@fe/lib/utils';
 
 // Base UI Alert Dialog Root
 function AlertDialog({

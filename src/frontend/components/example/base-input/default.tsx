@@ -1,4 +1,4 @@
-import { Input } from '~/components/ui/base-input';
+import { Input } from '@fe/components/ui/base-input';
 
 export default function InputDemo() {
   return (

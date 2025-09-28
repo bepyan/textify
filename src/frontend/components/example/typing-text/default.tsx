@@ -1,4 +1,4 @@
-import { TypingText } from '~/components/ui/typing-text';
+import { TypingText } from '@fe/components/ui/typing-text';
 
 export default function Component() {
   return (

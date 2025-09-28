@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@fe/*": ["src/frontend/*"],
+      "@be/*": ["src/worker/*"]
+    }
+  }
+}

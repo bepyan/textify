@@ -1,8 +1,8 @@
 import { Dialog as DialogPrimitive } from '@base-ui-components/react/dialog';
 import { X } from 'lucide-react';
 
-import { buttonVariants } from '~/components/ui/base-button';
-import { cn } from '~/lib/utils';
+import { buttonVariants } from '@fe/components/ui/base-button';
+import { cn } from '@fe/lib/utils';
 
 function Dialog({
   ...props
