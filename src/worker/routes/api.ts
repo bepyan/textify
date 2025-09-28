@@ -43,7 +43,7 @@ app.use('*', requestLoggingMiddleware());
 app.use('*', jsonParsingMiddleware());
 
 // Rate limiting (분당 1000 요청 - 개발 환경에서 완화)
-app.use('/extract/*', rateLimitMiddleware(1000, 60000));
+// app.use('/extract/*', rateLimitMiddleware(1000, 60000));
 
 // 전역 에러 핸들러
 app.use('*', errorHandler());
@@ -96,4 +96,3 @@ app.get(
 );
 
 export default app;
- 

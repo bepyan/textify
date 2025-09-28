@@ -67,7 +67,7 @@ export class NaverBlogExtractor extends BaseExtractor {
       let html: string;
       try {
         html = await this.fetchHtmlContent(url);
-      } catch (error) {
+      } catch {
         // 원본 URL 실패 시 대체 URL 시도
         const contentUrl = this.buildContentUrl(
           postInfo.authorId,

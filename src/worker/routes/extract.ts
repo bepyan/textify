@@ -30,47 +30,123 @@ import { detectPlatform, parseUrl } from '../utils/url-parser';
 const extract = new Hono();
 
 // ============================================================================
-// Cache Configuration
+// Common Handlers
 // ============================================================================
 
 /**
- * POST 요청 body 기반 캐시 키 생성 함수
+ * 추출기 팩토리 함수
  */
-async function generatePostCacheKey(c: {
-  req: { url: string; raw: Request };
-}): Promise<string> {
-  try {
-    // body를 복제하여 읽기 (원본 body는 보존)
-    const clonedRequest = c.req.raw.clone();
-    const body = (await clonedRequest.json()) as {
-      url?: string;
-      options?: Record<string, unknown>;
-    };
-
-    const pathname = new URL(c.req.url).pathname;
-    const targetUrl = body.url || 'unknown';
-    const options = body.options || {};
-
-    // URL과 옵션을 조합하여 캐시 키 생성
-    const optionsHash = JSON.stringify(options);
-    return `textify:${pathname}:${targetUrl}:${optionsHash}`;
-  } catch {
-    // body 파싱 실패 시 기본 키 사용
-    return `textify:${new URL(c.req.url).pathname}:${Date.now()}`;
+function createExtractor(platform: ContentPlatform) {
+  switch (platform) {
+    case ContentPlatform.YOUTUBE:
+      return new YouTubeExtractor();
+    case ContentPlatform.NAVER_BLOG:
+      return new NaverBlogExtractor();
+    default:
+      throw new ContentExtractionError(
+        ExtractionErrorType.UNSUPPORTED_PLATFORM,
+        `지원하지 않는 플랫폼입니다: ${platform}`,
+      );
   }
 }
 
 /**
- * 콘텐츠 추출용 캐시 미들웨어
+ * 공통 라우트 핸들러 팩토리
  */
-const contentCacheMiddleware = cache({
-  cacheName: 'textify-content-cache',
-  cacheControl: 'max-age=600', // 10분 캐시
-  keyGenerator: generatePostCacheKey,
-  wait: true, // Cloudflare Workers에서 필요
-  vary: ['Content-Type'],
-  cacheableStatusCodes: [200], // 성공 응답만 캐시
-});
+function createExtractionHandler(
+  expectedPlatform?: ContentPlatform,
+  platformErrorMessage?: string,
+) {
+  return async (c: any) => {
+    const startTime = performance.now();
+    const requestId = generateRequestId();
+    let detectedPlatform: ContentPlatform | 'unknown' = 'unknown';
+
+    try {
+      const { url, options } = c.req.valid('json');
+
+      // 플랫폼 감지 및 검증
+      if (expectedPlatform) {
+        // 특정 플랫폼 전용 엔드포인트
+        const platform = detectPlatform(url);
+        if (platform !== expectedPlatform) {
+          throw new ContentExtractionError(
+            ExtractionErrorType.INVALID_URL,
+            platformErrorMessage || `${expectedPlatform} URL이 아닙니다.`,
+            `제공된 URL: ${url}`,
+          );
+        }
+        detectedPlatform = expectedPlatform;
+      } else {
+        // 자동 감지 엔드포인트
+        const parseResult = parseUrl(url);
+        if (!parseResult.success || !parseResult.platform) {
+          const errorType =
+            parseResult.error === 'INVALID_URL'
+              ? ExtractionErrorType.INVALID_URL
+              : ExtractionErrorType.UNSUPPORTED_PLATFORM;
+
+          throw new ContentExtractionError(
+            errorType,
+            parseResult.error === 'INVALID_URL'
+              ? '유효하지 않은 URL입니다.'
+              : '지원하지 않는 플랫폼입니다.',
+            `제공된 URL: ${url}`,
+          );
+        }
+        detectedPlatform = parseResult.platform;
+      }
+
+      // 추출기 생성 및 콘텐츠 추출
+      const extractor = createExtractor(detectedPlatform);
+      const content = await extractor.extract(url, options as any);
+
+      // 성공 응답
+      const processingTime = Math.max(
+        1,
+        Math.round(performance.now() - startTime),
+      );
+      const metadata = createResponseMetadata(
+        requestId,
+        processingTime,
+        detectedPlatform,
+        Object.keys(content).filter(
+          (key) => content[key as keyof typeof content] !== undefined,
+        ),
+      );
+
+      return c.json(
+        {
+          success: true,
+          data: content,
+          metadata,
+        },
+        200,
+      );
+    } catch (error) {
+      // 자동 감지 엔드포인트에서 플랫폼 재감지 시도
+      if (!expectedPlatform && detectedPlatform === 'unknown') {
+        try {
+          const { url } = c.req.valid('json');
+          const parseResult = parseUrl(url);
+          if (parseResult.success && parseResult.platform) {
+            detectedPlatform = parseResult.platform;
+          }
+        } catch {
+          // 플랫폼 감지 실패 시 unknown 유지
+        }
+      }
+
+      return handleExtractionError(
+        c,
+        error,
+        requestId,
+        startTime,
+        detectedPlatform,
+      );
+    }
+  };
+}
 
 // ============================================================================
 // Route Handlers
@@ -81,7 +157,6 @@ const contentCacheMiddleware = cache({
  */
 extract.post(
   '/youtube',
-  contentCacheMiddleware, // 캐시 미들웨어 적용
   zValidator('json', ExtractionRequestSchema, (result, c) => {
     if (!result.success) {
       const requestId = generateRequestId();
@@ -107,59 +182,7 @@ extract.post(
       );
     }
   }),
-  async (c) => {
-    const startTime = performance.now();
-    const requestId = generateRequestId();
-
-    try {
-      const { url, options } = c.req.valid('json');
-
-      // YouTube URL 검증
-      const platform = detectPlatform(url);
-      if (platform !== ContentPlatform.YOUTUBE) {
-        throw new ContentExtractionError(
-          ExtractionErrorType.INVALID_URL,
-          'YouTube URL이 아닙니다.',
-          `제공된 URL: ${url}`,
-        );
-      }
-
-      // YouTube 추출기로 콘텐츠 추출
-      const extractor = new YouTubeExtractor();
-      const content = await extractor.extract(url, options);
-
-      // 성공 응답
-      const processingTime = Math.max(
-        1,
-        Math.round(performance.now() - startTime),
-      );
-      const metadata = createResponseMetadata(
-        requestId,
-        processingTime,
-        ContentPlatform.YOUTUBE,
-        Object.keys(content).filter(
-          (key) => content[key as keyof typeof content] !== undefined,
-        ),
-      );
-
-      return c.json(
-        {
-          success: true,
-          data: content,
-          metadata,
-        },
-        200,
-      );
-    } catch (error) {
-      return handleExtractionError(
-        c,
-        error,
-        requestId,
-        startTime,
-        ContentPlatform.YOUTUBE,
-      );
-    }
-  },
+  createExtractionHandler(ContentPlatform.YOUTUBE, 'YouTube URL이 아닙니다.'),
 );
 
 /**
@@ -167,7 +190,6 @@ extract.post(
  */
 extract.post(
   '/naver-blog',
-  contentCacheMiddleware, // 캐시 미들웨어 적용
   zValidator('json', ExtractionRequestSchema, (result, c) => {
     if (!result.success) {
       const requestId = generateRequestId();
@@ -193,59 +215,10 @@ extract.post(
       );
     }
   }),
-  async (c) => {
-    const startTime = performance.now();
-    const requestId = generateRequestId();
-
-    try {
-      const { url, options } = c.req.valid('json');
-
-      // 네이버 블로그 URL 검증
-      const platform = detectPlatform(url);
-      if (platform !== ContentPlatform.NAVER_BLOG) {
-        throw new ContentExtractionError(
-          ExtractionErrorType.INVALID_URL,
-          '네이버 블로그 URL이 아닙니다.',
-          `제공된 URL: ${url}`,
-        );
-      }
-
-      // 네이버 블로그 추출기로 콘텐츠 추출
-      const extractor = new NaverBlogExtractor();
-      const content = await extractor.extract(url, options);
-
-      // 성공 응답
-      const processingTime = Math.max(
-        1,
-        Math.round(performance.now() - startTime),
-      );
-      const metadata = createResponseMetadata(
-        requestId,
-        processingTime,
-        ContentPlatform.NAVER_BLOG,
-        Object.keys(content).filter(
-          (key) => content[key as keyof typeof content] !== undefined,
-        ),
-      );
-
-      return c.json(
-        {
-          success: true,
-          data: content,
-          metadata,
-        },
-        200,
-      );
-    } catch (error) {
-      return handleExtractionError(
-        c,
-        error,
-        requestId,
-        startTime,
-        ContentPlatform.NAVER_BLOG,
-      );
-    }
-  },
+  createExtractionHandler(
+    ContentPlatform.NAVER_BLOG,
+    '네이버 블로그 URL이 아닙니다.',
+  ),
 );
 
 /**
@@ -253,7 +226,6 @@ extract.post(
  */
 extract.post(
   '/auto',
-  contentCacheMiddleware, // 캐시 미들웨어 적용
   zValidator('json', ExtractionRequestSchema, (result, c) => {
     if (!result.success) {
       const requestId = generateRequestId();
@@ -274,101 +246,7 @@ extract.post(
       );
     }
   }),
-  async (c) => {
-    const startTime = performance.now();
-    const requestId = generateRequestId();
-    let url = '';
-
-    try {
-      const requestData = c.req.valid('json');
-      url = requestData.url;
-      const options = requestData.options;
-
-      // URL 파싱 및 플랫폼 자동 감지
-      const parseResult = parseUrl(url);
-
-      if (!parseResult.success || !parseResult.platform) {
-        const errorType =
-          parseResult.error === 'INVALID_URL'
-            ? ExtractionErrorType.INVALID_URL
-            : ExtractionErrorType.UNSUPPORTED_PLATFORM;
-
-        throw new ContentExtractionError(
-          errorType,
-          parseResult.error === 'INVALID_URL'
-            ? '유효하지 않은 URL입니다.'
-            : '지원하지 않는 플랫폼입니다.',
-          `제공된 URL: ${url}`,
-        );
-      }
-
-      // 플랫폼별 추출기 선택 및 실행
-      let content;
-      const detectedPlatform = parseResult.platform;
-
-      switch (parseResult.platform) {
-        case ContentPlatform.YOUTUBE: {
-          const youtubeExtractor = new YouTubeExtractor();
-          content = await youtubeExtractor.extract(url, options);
-          break;
-        }
-
-        case ContentPlatform.NAVER_BLOG: {
-          const naverExtractor = new NaverBlogExtractor();
-          content = await naverExtractor.extract(url, options);
-          break;
-        }
-
-        default:
-          throw new ContentExtractionError(
-            ExtractionErrorType.UNSUPPORTED_PLATFORM,
-            `지원하지 않는 플랫폼입니다: ${parseResult.platform}`,
-          );
-      }
-
-      // 성공 응답
-      const processingTime = Math.max(
-        1,
-        Math.round(performance.now() - startTime),
-      );
-      const metadata = createResponseMetadata(
-        requestId,
-        processingTime,
-        detectedPlatform,
-        Object.keys(content).filter(
-          (key) => content[key as keyof typeof content] !== undefined,
-        ),
-      );
-
-      return c.json(
-        {
-          success: true,
-          data: content,
-          metadata,
-        },
-        200,
-      );
-    } catch (error) {
-      // 플랫폼 감지를 다시 시도해서 메타데이터에 포함
-      let detectedPlatform: ContentPlatform | 'unknown' = 'unknown';
-      try {
-        const parseResult = parseUrl(url);
-        if (parseResult.success && parseResult.platform) {
-          detectedPlatform = parseResult.platform;
-        }
-      } catch {
-        // 플랫폼 감지 실패 시 unknown 유지
-      }
-
-      return handleExtractionError(
-        c,
-        error,
-        requestId,
-        startTime,
-        detectedPlatform,
-      );
-    }
-  },
+  createExtractionHandler(), // 자동 감지이므로 expectedPlatform 없음
 );
 
 // ============================================================================

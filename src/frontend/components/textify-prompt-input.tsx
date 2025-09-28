@@ -38,6 +38,7 @@ export function TextifyPromptInput({
       onSubmit?.(inputValue),
       new Promise((resolve) => setTimeout(resolve, 2000)),
     ]);
+    setIsLoading(false);
   };
 
   return (

@@ -9,12 +9,25 @@ export const Route = createFileRoute('/')({
 });
 
 function Page() {
+  const handleSubmit = async (value: string) => {
+    const response = await fetch(`/api/extract/auto`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ url: value }),
+    });
+
+    const data = await response.json();
+    console.log(data);
+  };
+
   return (
     <main className="h-full w-full">
       <div className="flex h-full max-h-[920px] min-h-[400px] w-full flex-col items-center justify-center">
         <LogoIcon className="size-8 fill-current" />
         <h2 className="mt-2 mb-6 text-2xl font-bold">무엇을 잡아올까요?</h2>
-        <TextifyPromptInput />
+        <TextifyPromptInput onSubmit={handleSubmit} />
       </div>
       <Skeleton className="size-full" />
     </main>
