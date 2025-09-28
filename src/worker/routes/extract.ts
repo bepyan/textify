@@ -20,7 +20,6 @@ import {
   createResponseMetadata,
   ContentPlatform,
 } from '../types/extraction';
-import { contentCache } from '../utils/cache';
 import { detectPlatform, parseUrl } from '../utils/url-parser';
 
 // ============================================================================
@@ -409,50 +408,5 @@ function handleExtractionError(
     500,
   );
 }
-
-// ============================================================================
-// Health Check
-// ============================================================================
-
-/**
- * GET /extract/health - 헬스 체크
- */
-extract.get('/health', (c) => {
-  const cacheStats = contentCache.getStats();
-
-  return c.json({
-    status: 'healthy',
-    service: 'content-extraction-api',
-    timestamp: new Date().toISOString(),
-    version: '1.0.0',
-    cache: cacheStats,
-  });
-});
-
-/**
- * GET /extract/stats - 캐시 및 성능 통계
- */
-extract.get('/stats', (c) => {
-  const cacheStats = contentCache.getStats();
-
-  return c.json({
-    cache: cacheStats,
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime ? process.uptime() : 0,
-  });
-});
-
-/**
- * POST /extract/cache/clear - 캐시 비우기 (관리용)
- */
-extract.post('/cache/clear', (c) => {
-  contentCache.clear();
-
-  return c.json({
-    success: true,
-    message: 'Cache cleared successfully',
-    timestamp: new Date().toISOString(),
-  });
-});
 
 export default extract;

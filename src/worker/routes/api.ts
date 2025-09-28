@@ -12,6 +12,7 @@ import {
   securityHeadersMiddleware,
   jsonParsingMiddleware,
 } from '../middleware/error-handler';
+import { contentCache } from '../utils/cache';
 
 const app = new Hono();
 
@@ -49,29 +50,67 @@ app.get('/', (c) =>
   }),
 );
 
-// 콘텐츠 추출 API 라우트 추가
 app.route('/extract', extract);
-// app.get(
-//   '/',
-//   describeRoute({
-//     description: 'Say hello to the user',
-//     responses: {
-//       200: {
-//         description: 'Successful response',
-//         content: {
-//           'application/json': { schema: resolver(responseSchema) },
-//         },
-//       },
-//     },
-//   }),
-//   validator('query', querySchema),
-//   (c) => {
-//     const query = c.req.valid('query');
-//     return c.text(`Hello ${query?.name ?? 'Hono'}!`);
-//   },
-// );
-app.get('/health', (c) => c.text('OK'));
-app.get('/docs', swaggerUI({ url: '/api/schema' }));
+
+// ============================================================================
+// Health Check & Monitoring
+// ============================================================================
+
+/**
+ * GET /health - 전역 헬스 체크
+ */
+app.get('/health', (c) => {
+  const cacheStats = contentCache.getStats();
+
+  return c.json({
+    status: 'healthy',
+    service: 'textify-api',
+    timestamp: new Date().toISOString(),
+    version: '1.0.0',
+    uptime: process.uptime ? process.uptime() : 0,
+    cache: cacheStats,
+    endpoints: {
+      extraction: '/api/extract',
+      documentation: '/api/docs',
+      schema: '/api/schema',
+    },
+  });
+});
+
+/**
+ * GET /stats - 전역 통계 정보
+ */
+app.get('/stats', (c) => {
+  const cacheStats = contentCache.getStats();
+
+  return c.json({
+    cache: cacheStats,
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime ? process.uptime() : 0,
+    memory: process.memoryUsage ? process.memoryUsage() : null,
+  });
+});
+
+/**
+ * POST /cache/clear - 전역 캐시 비우기 (관리용)
+ */
+app.post('/cache/clear', (c) => {
+  contentCache.clear();
+
+  return c.json({
+    success: true,
+    message: 'Global cache cleared successfully',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get(
+  '/docs',
+  swaggerUI({
+    url: '/api/schema',
+  }),
+);
+
 app.get(
   '/schema',
   openAPIRouteHandler(app, {
