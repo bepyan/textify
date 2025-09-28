@@ -6,6 +6,7 @@
 
 import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
+import { cache } from 'hono/cache';
 
 import { NaverBlogExtractor } from '../extractors/naver-blog-extractor';
 import { YouTubeExtractor } from '../extractors/youtube-extractor';
@@ -29,6 +30,44 @@ import { detectPlatform, parseUrl } from '../utils/url-parser';
 const extract = new Hono();
 
 // ============================================================================
+// Cache Configuration
+// ============================================================================
+
+/**
+ * POST 요청 body 기반 캐시 키 생성 함수
+ */
+async function generatePostCacheKey(c: { req: { url: string; raw: Request } }): Promise<string> {
+  try {
+    // body를 복제하여 읽기 (원본 body는 보존)
+    const clonedRequest = c.req.raw.clone();
+    const body = await clonedRequest.json() as { url?: string; options?: Record<string, unknown> };
+    
+    const pathname = new URL(c.req.url).pathname;
+    const targetUrl = body.url || 'unknown';
+    const options = body.options || {};
+    
+    // URL과 옵션을 조합하여 캐시 키 생성
+    const optionsHash = JSON.stringify(options);
+    return `textify:${pathname}:${targetUrl}:${optionsHash}`;
+  } catch {
+    // body 파싱 실패 시 기본 키 사용
+    return `textify:${new URL(c.req.url).pathname}:${Date.now()}`;
+  }
+}
+
+/**
+ * 콘텐츠 추출용 캐시 미들웨어
+ */
+const contentCacheMiddleware = cache({
+  cacheName: 'textify-content-cache',
+  cacheControl: 'max-age=600', // 10분 캐시
+  keyGenerator: generatePostCacheKey,
+  wait: true, // Cloudflare Workers에서 필요
+  vary: ['Content-Type'],
+  cacheableStatusCodes: [200], // 성공 응답만 캐시
+});
+
+// ============================================================================
 // Route Handlers
 // ============================================================================
 
@@ -37,6 +76,7 @@ const extract = new Hono();
  */
 extract.post(
   '/youtube',
+  contentCacheMiddleware, // 캐시 미들웨어 적용
   zValidator('json', ExtractionRequestSchema, (result, c) => {
     if (!result.success) {
       const requestId = generateRequestId();
@@ -122,6 +162,7 @@ extract.post(
  */
 extract.post(
   '/naver-blog',
+  contentCacheMiddleware, // 캐시 미들웨어 적용
   zValidator('json', ExtractionRequestSchema, (result, c) => {
     if (!result.success) {
       const requestId = generateRequestId();
@@ -207,6 +248,7 @@ extract.post(
  */
 extract.post(
   '/auto',
+  contentCacheMiddleware, // 캐시 미들웨어 적용
   zValidator('json', ExtractionRequestSchema, (result, c) => {
     if (!result.success) {
       const requestId = generateRequestId();
