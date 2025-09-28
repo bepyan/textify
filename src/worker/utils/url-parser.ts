@@ -144,7 +144,8 @@ export function extractPostInfo(url: string): PostInfo | null {
           !authorId.includes('&') &&
           /^[a-zA-Z0-9_-]+$/.test(authorId) && // authorId는 영숫자, 언더스코어, 하이픈만 허용
           /^\d+$/.test(postId) &&
-          postId.length >= 1 && postId.length <= 20 // postId 길이 제한
+          postId.length >= 1 &&
+          postId.length <= 20 // postId 길이 제한
         ) {
           return {
             authorId,
