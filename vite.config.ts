@@ -25,7 +25,10 @@ export default defineConfig({
     projects: [
       {
         test: {
-          include: ['src/frontend/**/*.test.(ts|tsx)'],
+          include: [
+            'src/frontend/**/*.test.(ts|tsx)',
+            'tests/e2e/**/*.test.ts',
+          ],
           environment: 'jsdom',
           browser: {
             provider: 'playwright',
@@ -37,7 +40,11 @@ export default defineConfig({
       },
       {
         test: {
-          include: ['src/worker/**/*.test.ts'],
+          include: [
+            'src/worker/**/*.test.ts',
+            'tests/contract/**/*.test.ts',
+            'tests/integration/**/*.test.ts',
+          ],
           environment: 'node',
         },
       },

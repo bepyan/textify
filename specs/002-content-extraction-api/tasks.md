@@ -48,59 +48,59 @@
 
 ## Phase 3.1: Setup
 
-- [ ] T001 Install HTML parsing dependencies (linkedom, html-entities) via bun
-- [ ] T002 Create directory structure for extractors, types, utils in src/worker/
-- [ ] T003 [P] Copy contract test files from specs/contracts/ to tests/contract/
+- [x] T001 Install HTML parsing dependencies (linkedom, html-entities) via bun
+- [x] T002 Create directory structure for extractors, types, utils in src/worker/
+- [x] T003 [P] Copy contract test files from specs/contracts/ to tests/contract/
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
 
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
 **Constitution Requirement: Business logic testing mandatory, TDD for core functionality**
 
-- [ ] T004 [P] Contract test auto-extract endpoint in tests/contract/auto-extract.contract.test.ts
-- [ ] T005 [P] Contract test YouTube extraction in tests/contract/youtube-extract.contract.test.ts  
-- [ ] T006 [P] Contract test Naver blog extraction in tests/contract/naver-blog-extract.contract.test.ts
-- [ ] T007 [P] Unit test for extraction types validation in src/worker/types/extraction.test.ts
-- [ ] T008 [P] Unit test for error types handling in src/worker/types/errors.test.ts
-- [ ] T009 [P] Unit test for URL parsing logic in src/worker/utils/url-parser.test.ts
-- [ ] T010 [P] Unit test for HTML parsing utilities in src/worker/utils/html-parser.test.ts
+- [x] T004 [P] Contract test auto-extract endpoint in tests/contract/auto-extract.contract.test.ts
+- [x] T005 [P] Contract test YouTube extraction in tests/contract/youtube-extract.contract.test.ts  
+- [x] T006 [P] Contract test Naver blog extraction in tests/contract/naver-blog-extract.contract.test.ts
+- [x] T007 [P] Unit test for extraction types validation in src/worker/types/extraction.test.ts
+- [x] T008 [P] Unit test for error types handling in src/worker/types/errors.test.ts
+- [x] T009 [P] Unit test for URL parsing logic in src/worker/utils/url-parser.test.ts
+- [x] T010 [P] Unit test for HTML parsing utilities in src/worker/utils/html-parser.test.ts
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
 
 **Constitution Requirements: TypeScript strict mode, max 20 lines per function, colocation strategy**
 
 ### Foundation Layer (Types System)
-- [ ] T011 [P] Core extraction types and enums in src/worker/types/extraction.ts
-- [ ] T012 [P] Error types and custom error class in src/worker/types/errors.ts
-- [ ] T013 [P] Zod validation schemas for all types in src/worker/types/validation.ts
+- [x] T011 [P] Core extraction types and enums in src/worker/types/extraction.ts
+- [x] T012 [P] Error types and custom error class in src/worker/types/errors.ts
+- [x] T013 [P] Zod validation schemas for all types in src/worker/types/validation.ts
 
 ### Utility Layer (Common Functions)  
-- [ ] T014 [P] URL parsing utility with platform detection in src/worker/utils/url-parser.ts
-- [ ] T015 [P] HTML parsing helper functions in src/worker/utils/html-parser.ts
+- [x] T014 [P] URL parsing utility with platform detection in src/worker/utils/url-parser.ts
+- [x] T015 [P] HTML parsing helper functions in src/worker/utils/html-parser.ts
 - [ ] T016 [P] Structured logging utility in src/worker/utils/logger.ts
 
 ### Extractor Layer (Business Logic)
-- [ ] T017 [P] Base extractor abstract class in src/worker/extractors/base-extractor.ts
-- [ ] T018 YouTube extractor implementation in src/worker/extractors/youtube-extractor.ts
-- [ ] T019 Naver blog extractor implementation in src/worker/extractors/naver-blog-extractor.ts
+- [x] T017 [P] Base extractor abstract class in src/worker/extractors/base-extractor.ts
+- [x] T018 YouTube extractor implementation in src/worker/extractors/youtube-extractor.ts
+- [x] T019 Naver blog extractor implementation in src/worker/extractors/naver-blog-extractor.ts
 
 ### API Layer (Route Handlers)
-- [ ] T020 Extraction API routes with validation in src/worker/routes/extract.ts
-- [ ] T021 Integrate extract routes into existing API in src/worker/routes/api.ts
+- [x] T020 Extraction API routes with validation in src/worker/routes/extract.ts
+- [x] T021 Integrate extract routes into existing API in src/worker/routes/api.ts
 
 ## Phase 3.4: Integration
 
-- [ ] T022 Error handling middleware for extraction errors
-- [ ] T023 Request/response logging for extraction endpoints  
-- [ ] T024 Input validation with comprehensive error messages
-- [ ] T025 Update OpenAPI schema integration in existing swagger setup
+- [x] T022 Error handling middleware for extraction errors
+- [x] T023 Request/response logging for extraction endpoints  
+- [x] T024 Input validation with comprehensive error messages
+- [x] T025 Update OpenAPI schema integration in existing swagger setup
 
 ## Phase 3.5: Polish
 
-- [ ] T026 [P] Additional unit tests for edge cases in src/worker/extractors/base-extractor.test.ts
-- [ ] T027 [P] Integration test for complete extraction flow in src/worker/routes/extract.integration.test.ts
-- [ ] T028 [P] Performance optimization for large content handling
-- [ ] T029 Update API documentation with new extraction endpoints
+- [x] T026 [P] Additional unit tests for edge cases in src/worker/extractors/base-extractor.test.ts
+- [x] T027 [P] Integration test for complete extraction flow in src/worker/routes/extract.integration.test.ts
+- [x] T028 [P] Performance optimization for large content handling
+- [x] T029 Update API documentation with new extraction endpoints
 
 ## Dependencies
 
