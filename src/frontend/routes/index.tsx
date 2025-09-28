@@ -4,6 +4,7 @@ import { LogoIcon } from '@fe/components/icons';
 import { TextifyPromptInput } from '@fe/components/textify-prompt-input';
 import { Skeleton } from '@fe/components/ui/skeleton';
 import { client } from '@fe/lib/api';
+// import { client } from '@fe/lib/api';
 
 export const Route = createFileRoute('/')({
   component: Page,
@@ -11,9 +12,9 @@ export const Route = createFileRoute('/')({
 
 function Page() {
   const handleSubmit = async (value: string) => {
-    const res = await client.api.extract.$get({
-      query: {
-        name: value,
+    const res = await client.api.sample.users[':id'].$get({
+      param: {
+        id: value,
       },
     });
     const data = await res.json();
