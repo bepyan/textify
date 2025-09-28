@@ -52,6 +52,12 @@ app.use('*', errorHandler());
 // Routes
 // ============================================================================
 
+app.route('/extract', extract);
+
+// ============================================================================
+// Utils Endpoints
+// ============================================================================
+
 app.get('/', (c) =>
   c.json({
     name: 'Textify API',
@@ -61,65 +67,9 @@ app.get('/', (c) =>
   }),
 );
 
-app.route('/extract', extract);
-
-// ============================================================================
-// Health Check & Monitoring
-// ============================================================================
-
-/**
- * GET /health - 전역 헬스 체크
- */
 app.get('/health', (c) => {
-  return c.json({
-    status: 'healthy',
-    service: 'textify-api',
-    timestamp: new Date().toISOString(),
-    version: '1.0.0',
-    uptime: process.uptime ? process.uptime() : 0,
-    cache: {
-      type: 'hono-cache-middleware',
-      description: 'HTTP-level caching with Web Standards Cache API',
-    },
-    endpoints: {
-      extraction: '/api/extract',
-      documentation: '/api/docs',
-      schema: '/api/schema',
-    },
-  });
+  return c.text('OK');
 });
-
-/**
- * GET /stats - 전역 통계 정보
- */
-app.get('/stats', (c) => {
-  return c.json({
-    cache: {
-      type: 'hono-cache-middleware',
-      description: 'HTTP-level caching with Web Standards Cache API',
-      note: 'Cache statistics are managed by Cloudflare Workers Cache API',
-    },
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime ? process.uptime() : 0,
-    memory: process.memoryUsage ? process.memoryUsage() : null,
-  });
-});
-
-/**
- * POST /cache/clear - 전역 캐시 비우기 (관리용)
- */
-app.post('/cache/clear', (c) => {
-  return c.json({
-    success: false,
-    message: 'Cache clearing is managed by Cloudflare Workers Cache API',
-    note: 'Use Cloudflare Dashboard or API to manage cache',
-    timestamp: new Date().toISOString(),
-  });
-});
-
-// ----------------------------------------------------------------------------
-// Swagger UI and OpenAPI Schema
-// ----------------------------------------------------------------------------
 
 app.get(
   '/docs',
@@ -146,3 +96,4 @@ app.get(
 );
 
 export default app;
+ 
