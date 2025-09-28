@@ -20,14 +20,17 @@ const app = new Hono();
 // ============================================================================
 
 // CORS 설정
-app.use('*', cors({
-  origin: '*',
-  allowHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
-  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  exposeHeaders: ['Content-Length', 'X-Request-ID'],
-  maxAge: 86400,
-  credentials: false,
-}));
+app.use(
+  '*',
+  cors({
+    origin: '*',
+    allowHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    exposeHeaders: ['Content-Length', 'X-Request-ID'],
+    maxAge: 86400,
+    credentials: false,
+  }),
+);
 
 // 보안 헤더
 app.use('*', securityHeadersMiddleware());

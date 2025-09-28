@@ -36,16 +36,21 @@ const extract = new Hono();
 /**
  * POST 요청 body 기반 캐시 키 생성 함수
  */
-async function generatePostCacheKey(c: { req: { url: string; raw: Request } }): Promise<string> {
+async function generatePostCacheKey(c: {
+  req: { url: string; raw: Request };
+}): Promise<string> {
   try {
     // body를 복제하여 읽기 (원본 body는 보존)
     const clonedRequest = c.req.raw.clone();
-    const body = await clonedRequest.json() as { url?: string; options?: Record<string, unknown> };
-    
+    const body = (await clonedRequest.json()) as {
+      url?: string;
+      options?: Record<string, unknown>;
+    };
+
     const pathname = new URL(c.req.url).pathname;
     const targetUrl = body.url || 'unknown';
     const options = body.options || {};
-    
+
     // URL과 옵션을 조합하여 캐시 키 생성
     const optionsHash = JSON.stringify(options);
     return `textify:${pathname}:${targetUrl}:${optionsHash}`;

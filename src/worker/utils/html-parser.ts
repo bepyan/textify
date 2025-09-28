@@ -72,7 +72,9 @@ export interface ImageInfo {
 export function parseDocument(html: string): Document {
   if (!html || typeof html !== 'string') {
     // 빈 HTML 문서 생성
-    return (parseHTML('<html><head></head><body></body></html>') as LinkedomWindow).document;
+    return (
+      parseHTML('<html><head></head><body></body></html>') as LinkedomWindow
+    ).document;
   }
 
   try {
@@ -80,7 +82,9 @@ export function parseDocument(html: string): Document {
     return document;
   } catch {
     // 파싱 실패 시 빈 문서 반환
-    return (parseHTML('<html><head></head><body></body></html>') as LinkedomWindow).document;
+    return (
+      parseHTML('<html><head></head><body></body></html>') as LinkedomWindow
+    ).document;
   }
 }
 
