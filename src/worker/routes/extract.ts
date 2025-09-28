@@ -38,9 +38,33 @@ const extract = new Hono();
  */
 extract.post(
   '/youtube',
-  zValidator('json', ExtractionRequestSchema),
+  zValidator('json', ExtractionRequestSchema, (result, c) => {
+    if (!result.success) {
+      const requestId = generateRequestId();
+      const metadata = createResponseMetadata(
+        requestId,
+        0,
+        ContentPlatform.YOUTUBE,
+        [],
+      );
+
+      return c.json(
+        {
+          success: false,
+          error: {
+            type: 'VALIDATION_ERROR',
+            message: '요청 데이터가 유효하지 않습니다.',
+            details: JSON.stringify(result.error.issues),
+            retryable: false,
+          },
+          metadata,
+        },
+        400,
+      );
+    }
+  }),
   async (c) => {
-    const startTime = Date.now();
+    const startTime = performance.now();
     const requestId = generateRequestId();
 
     try {
@@ -61,7 +85,10 @@ extract.post(
       const content = await extractor.extract(url, options);
 
       // 성공 응답
-      const processingTime = Date.now() - startTime;
+      const processingTime = Math.max(
+        1,
+        Math.round(performance.now() - startTime),
+      );
       const metadata = createResponseMetadata(
         requestId,
         processingTime,
@@ -96,9 +123,33 @@ extract.post(
  */
 extract.post(
   '/naver-blog',
-  zValidator('json', ExtractionRequestSchema),
+  zValidator('json', ExtractionRequestSchema, (result, c) => {
+    if (!result.success) {
+      const requestId = generateRequestId();
+      const metadata = createResponseMetadata(
+        requestId,
+        0,
+        ContentPlatform.NAVER_BLOG,
+        [],
+      );
+
+      return c.json(
+        {
+          success: false,
+          error: {
+            type: 'VALIDATION_ERROR',
+            message: '요청 데이터가 유효하지 않습니다.',
+            details: JSON.stringify(result.error.issues),
+            retryable: false,
+          },
+          metadata,
+        },
+        400,
+      );
+    }
+  }),
   async (c) => {
-    const startTime = Date.now();
+    const startTime = performance.now();
     const requestId = generateRequestId();
 
     try {
@@ -119,7 +170,10 @@ extract.post(
       const content = await extractor.extract(url, options);
 
       // 성공 응답
-      const processingTime = Date.now() - startTime;
+      const processingTime = Math.max(
+        1,
+        Math.round(performance.now() - startTime),
+      );
       const metadata = createResponseMetadata(
         requestId,
         processingTime,
@@ -154,13 +208,35 @@ extract.post(
  */
 extract.post(
   '/auto',
-  zValidator('json', ExtractionRequestSchema),
+  zValidator('json', ExtractionRequestSchema, (result, c) => {
+    if (!result.success) {
+      const requestId = generateRequestId();
+      const metadata = createResponseMetadata(requestId, 0, 'unknown', []);
+
+      return c.json(
+        {
+          success: false,
+          error: {
+            type: 'VALIDATION_ERROR',
+            message: '요청 데이터가 유효하지 않습니다.',
+            details: JSON.stringify(result.error.issues),
+            retryable: false,
+          },
+          metadata,
+        },
+        400,
+      );
+    }
+  }),
   async (c) => {
-    const startTime = Date.now();
+    const startTime = performance.now();
     const requestId = generateRequestId();
+    let url = '';
 
     try {
-      const { url, options } = c.req.valid('json');
+      const requestData = c.req.valid('json');
+      url = requestData.url;
+      const options = requestData.options;
 
       // URL 파싱 및 플랫폼 자동 감지
       const parseResult = parseUrl(url);
@@ -205,7 +281,10 @@ extract.post(
       }
 
       // 성공 응답
-      const processingTime = Date.now() - startTime;
+      const processingTime = Math.max(
+        1,
+        Math.round(performance.now() - startTime),
+      );
       const metadata = createResponseMetadata(
         requestId,
         processingTime,
@@ -224,7 +303,24 @@ extract.post(
         200,
       );
     } catch (error) {
-      return handleExtractionError(c, error, requestId, startTime, 'unknown');
+      // 플랫폼 감지를 다시 시도해서 메타데이터에 포함
+      let detectedPlatform: ContentPlatform | 'unknown' = 'unknown';
+      try {
+        const parseResult = parseUrl(url);
+        if (parseResult.success && parseResult.platform) {
+          detectedPlatform = parseResult.platform;
+        }
+      } catch {
+        // 플랫폼 감지 실패 시 unknown 유지
+      }
+
+      return handleExtractionError(
+        c,
+        error,
+        requestId,
+        startTime,
+        detectedPlatform,
+      );
     }
   },
 );
@@ -240,7 +336,7 @@ function handleExtractionError(
   startTime: number,
   platform: ContentPlatform | 'unknown',
 ) {
-  const processingTime = Date.now() - startTime;
+  const processingTime = Math.max(1, Math.round(performance.now() - startTime));
 
   // ContentExtractionError 처리
   if (error instanceof ContentExtractionError) {
@@ -280,7 +376,7 @@ function handleExtractionError(
       {
         success: false,
         error: {
-          type: ExtractionErrorType.INVALID_URL,
+          type: 'VALIDATION_ERROR',
           message: '요청 데이터가 유효하지 않습니다.',
           details: JSON.stringify((error as { issues: unknown }).issues),
           retryable: false,

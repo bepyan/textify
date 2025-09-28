@@ -152,6 +152,16 @@ export abstract class BaseExtractor {
       } catch (error) {
         lastError = error as Error;
 
+        // AbortError (타임아웃)인 경우 특별 처리
+        if (error instanceof Error && error.name === 'AbortError') {
+          throw new ContentExtractionError(
+            ExtractionErrorType.TIMEOUT,
+            '요청 시간이 초과되었습니다.',
+            `타임아웃: ${this.timeout}ms`,
+            true,
+          );
+        }
+
         // 재시도 불가능한 에러인 경우 즉시 throw
         if (error instanceof ContentExtractionError && !error.retryable) {
           throw error;

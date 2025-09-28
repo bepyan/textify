@@ -10,6 +10,7 @@ import {
   rateLimitMiddleware,
   corsMiddleware,
   securityHeadersMiddleware,
+  jsonParsingMiddleware,
 } from '../middleware/error-handler';
 
 const app = new Hono();
@@ -26,8 +27,11 @@ app.use('*', securityHeadersMiddleware());
 app.use('*', requestIdMiddleware());
 app.use('*', requestLoggingMiddleware());
 
-// Rate limiting (분당 100 요청)
-app.use('/extract/*', rateLimitMiddleware(100, 60000));
+// JSON 파싱 에러 처리
+app.use('*', jsonParsingMiddleware());
+
+// Rate limiting (분당 1000 요청 - 개발 환경에서 완화)
+app.use('/extract/*', rateLimitMiddleware(1000, 60000));
 
 // 전역 에러 핸들러
 app.use('*', errorHandler());

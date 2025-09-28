@@ -176,25 +176,29 @@ describe('YouTube Content Extraction API Contract', () => {
       expect(responseBody.error.type).toBe('CONTENT_NOT_FOUND');
     });
 
-    it('should return 504 for timeout', async () => {
-      // Given: 매우 짧은 타임아웃
+    it('should return 400 for invalid timeout value', async () => {
+      // Given: 유효하지 않은 타임아웃 값 (최소값 미만)
       const request = {
         url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
         options: {
-          timeout: 1, // 1ms - 의도적으로 타임아웃 발생
+          timeout: 1, // 1ms - 최소값(1000ms) 미만으로 검증 에러 발생
         },
       };
 
       // When: API 호출
       const response = await apiClient.post('/extract/youtube', request);
 
-      // Then: 504 타임아웃 응답
-      expect(response.status).toBe(504);
+      // Then: 400 검증 에러 응답
+      expect(response.status).toBe(400);
 
       const responseBody = await response.json();
       expect(responseBody.success).toBe(false);
-      expect(responseBody.error.type).toBe('TIMEOUT');
-      expect(responseBody.error.retryable).toBe(true);
+      expect(responseBody.error.type).toBe('VALIDATION_ERROR');
+      expect(responseBody.error.retryable).toBe(false);
+      expect(responseBody.error.details).toContain('timeout');
+      expect(responseBody.error.details).toContain(
+        '최소 1초 이상이어야 합니다',
+      );
     });
 
     it('should validate request body schema', async () => {

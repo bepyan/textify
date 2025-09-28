@@ -46,7 +46,11 @@ const PLATFORM_PATTERNS: PlatformInfo[] = [
   },
   {
     platform: ContentPlatform.NAVER_BLOG,
-    patterns: [/^(?:https?:\/\/)?blog\.naver\.com\/([^/\s]+)\/(\d+)$/],
+    patterns: [
+      /^(?:https?:\/\/)?blog\.naver\.com\/([^/\s]+)\/(\d+)(?:\?.*)?$/,
+      /^(?:https?:\/\/)?blog\.naver\.com\/([^/\s]+)\/(\d+)\/.*$/,
+      /^(?:https?:\/\/)?blog\.naver\.com\/PostView\.naver\?blogId=([^&\s]+)&logNo=(\d+)(?:&.*)?$/,
+    ],
     extractor: 'NaverBlogExtractor',
   },
 ];
@@ -116,27 +120,37 @@ export function extractPostInfo(url: string): PostInfo | null {
   try {
     const normalizedUrl = normalizeUrl(url);
 
-    // 네이버 블로그 패턴 - 더 엄격한 검증
-    // 정확히 blog.naver.com/authorId/postId 형식만 허용
-    const pattern = /^(?:https?:\/\/)?blog\.naver\.com\/([^/\s]+)\/(\d+)$/;
-    const match = normalizedUrl.match(pattern);
+    // 네이버 블로그 패턴들 - 더 엄격한 검증
+    const patterns = [
+      // 기본 형태: blog.naver.com/authorId/postId (정확히 끝나야 함)
+      /^(?:https?:\/\/)?blog\.naver\.com\/([^/\s]+)\/(\d+)(?:\?.*)?$/,
+      // PostView 형태: blog.naver.com/PostView.naver?blogId=authorId&logNo=postId
+      /^(?:https?:\/\/)?blog\.naver\.com\/PostView\.naver\?blogId=([^&\s]+)&logNo=(\d+)(?:&.*)?$/,
+    ];
 
-    if (match && match[1] && match[2]) {
-      const authorId = match[1];
-      const postId = match[2];
+    for (const pattern of patterns) {
+      const match = normalizedUrl.match(pattern);
 
-      // authorId가 비어있지 않고, postId가 숫자인지 확인
-      // 또한 authorId에 빈 문자열이나 슬래시가 없는지 확인
-      if (
-        authorId.length > 0 &&
-        authorId !== '' &&
-        !authorId.includes('/') &&
-        /^\d+$/.test(postId)
-      ) {
-        return {
-          authorId,
-          postId,
-        };
+      if (match && match[1] && match[2]) {
+        const authorId = match[1];
+        const postId = match[2];
+
+        // 더 엄격한 검증
+        if (
+          authorId.length > 0 &&
+          authorId !== '' &&
+          !authorId.includes('/') &&
+          !authorId.includes('?') &&
+          !authorId.includes('&') &&
+          /^[a-zA-Z0-9_-]+$/.test(authorId) && // authorId는 영숫자, 언더스코어, 하이픈만 허용
+          /^\d+$/.test(postId) &&
+          postId.length >= 1 && postId.length <= 20 // postId 길이 제한
+        ) {
+          return {
+            authorId,
+            postId,
+          };
+        }
       }
     }
 

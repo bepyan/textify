@@ -120,7 +120,7 @@ export function errorHandler() {
         const response: ErrorResponse = {
           success: false,
           error: {
-            type: ExtractionErrorType.INVALID_URL,
+            type: 'VALIDATION_ERROR',
             message: '요청 데이터가 유효하지 않습니다.',
             details: JSON.stringify((error as { issues: unknown }).issues),
             retryable: false,
@@ -361,5 +361,59 @@ export function securityHeadersMiddleware() {
     c.header('X-XSS-Protection', '1; mode=block');
     c.header('Referrer-Policy', 'strict-origin-when-cross-origin');
     c.header('Content-Security-Policy', "default-src 'self'");
+  };
+}
+
+// ============================================================================
+// JSON Parsing Middleware
+// ============================================================================
+
+export function jsonParsingMiddleware() {
+  return async (c: Context, next: Next) => {
+    // POST 요청이고 Content-Type이 JSON인 경우에만 처리
+    if (
+      c.req.method === 'POST' &&
+      c.req.header('content-type')?.includes('application/json')
+    ) {
+      try {
+        // 요청 본문을 미리 파싱해서 검증
+        const body = await c.req.text();
+        if (body.trim()) {
+          JSON.parse(body);
+        } else {
+          // 빈 본문인 경우 에러 발생
+          throw new Error('Request body is empty');
+        }
+      } catch (error) {
+        const requestId = c.get('requestId') || generateRequestId();
+
+        logger.warn('Malformed JSON in request body', {
+          requestId,
+          path: c.req.path,
+          method: c.req.method,
+          error: error instanceof Error ? error.message : String(error),
+        });
+
+        const response: ErrorResponse = {
+          success: false,
+          error: {
+            type: 'MALFORMED_JSON',
+            message: '잘못된 JSON 형식입니다.',
+            details: error instanceof Error ? error.message : String(error),
+            retryable: false,
+          },
+          metadata: {
+            requestId,
+            timestamp: new Date().toISOString(),
+            path: c.req.path,
+            method: c.req.method,
+          },
+        };
+
+        return c.json(response, 400);
+      }
+    }
+
+    await next();
   };
 }

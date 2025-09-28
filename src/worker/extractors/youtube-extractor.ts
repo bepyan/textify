@@ -65,6 +65,15 @@ export class YouTubeExtractor extends BaseExtractor {
     // 메타데이터 추출
     const metadata = await this.extractVideoMetadata(html, videoId, options);
 
+    // 비디오 존재 여부 확인
+    if (!metadata.title || metadata.title.trim() === '') {
+      throw new ContentExtractionError(
+        ExtractionErrorType.CONTENT_NOT_FOUND,
+        '비디오를 찾을 수 없습니다.',
+        `비디오 ID: ${videoId}`,
+      );
+    }
+
     return {
       id: this.generateContentId(url),
       platform: ContentPlatform.YOUTUBE,

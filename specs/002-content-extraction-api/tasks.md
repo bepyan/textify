@@ -77,7 +77,7 @@
 ### Utility Layer (Common Functions)  
 - [x] T014 [P] URL parsing utility with platform detection in src/worker/utils/url-parser.ts
 - [x] T015 [P] HTML parsing helper functions in src/worker/utils/html-parser.ts
-- [ ] T016 [P] Structured logging utility in src/worker/utils/logger.ts
+- [x] T016 [P] Structured logging utility in src/worker/utils/logger.ts
 
 ### Extractor Layer (Business Logic)
 - [x] T017 [P] Base extractor abstract class in src/worker/extractors/base-extractor.ts

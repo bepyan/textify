@@ -81,6 +81,7 @@ export interface ResponseMetadata {
   processingTime: number;
   platform: ContentPlatform | 'unknown';
   extractedFields: string[];
+  timestamp: string;
 }
 
 export interface ExtractionResponse {
@@ -223,6 +224,7 @@ export const ExtractionResponseSchema = z.object({
     processingTime: z.number().min(0),
     platform: z.enum(['youtube', 'naver_blog', 'unknown']),
     extractedFields: z.array(z.string()),
+    timestamp: z.string(),
   }),
 });
 
@@ -268,6 +270,7 @@ export function createResponseMetadata(
     processingTime,
     platform,
     extractedFields,
+    timestamp: new Date().toISOString(),
   };
 }
 

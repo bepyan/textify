@@ -217,7 +217,7 @@ describe('API Integration Tests', () => {
       const response = await apiClient.post('/extract/auto', {
         url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
         options: {
-          maxContentLength: 1000,
+          maxContentLength: 2048, // 2KB로 수정 (최소 1KB 이상 필요)
           timeout: 5000,
         },
       });
@@ -226,7 +226,7 @@ describe('API Integration Tests', () => {
 
       const data = await response.json();
       expect(data.success).toBe(true);
-      expect(data.data.description.length).toBeLessThanOrEqual(1000);
+      expect(data.data.description.length).toBeLessThanOrEqual(2048);
     });
   });
 

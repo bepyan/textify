@@ -74,24 +74,46 @@ export function extractText(
     let text = '';
 
     if (options.preserveLineBreaks) {
-      // 블록 요소들을 줄바꿈으로 변환 (간단한 방법)
-      let htmlWithBreaks = html;
-      htmlWithBreaks = htmlWithBreaks.replace(/<\/p>/gi, '</p>\n');
-      htmlWithBreaks = htmlWithBreaks.replace(/<\/div>/gi, '</div>\n');
-      htmlWithBreaks = htmlWithBreaks.replace(/<br\s*\/?>/gi, '\n');
-      htmlWithBreaks = htmlWithBreaks.replace(
-        /<\/h[1-6]>/gi,
-        (match) => match + '\n',
+      // 정규식을 사용해서 블록 요소를 줄바꿈으로 변환하고 HTML 태그 제거
+      let textWithBreaks = html;
+
+      // script와 style 태그 제거
+      textWithBreaks = textWithBreaks.replace(
+        /<script[^>]*>[\s\S]*?<\/script>/gi,
+        '',
+      );
+      textWithBreaks = textWithBreaks.replace(
+        /<style[^>]*>[\s\S]*?<\/style>/gi,
+        '',
       );
 
-      const tempDoc = parseDocument(htmlWithBreaks);
-      const scriptsAndStyles = tempDoc.querySelectorAll('script, style');
-      scriptsAndStyles.forEach((element) => element.remove());
-      text =
-        tempDoc.body?.textContent ||
-        tempDoc.documentElement?.textContent ||
-        tempDoc.textContent ||
-        '';
+      // 블록 요소들을 줄바꿈으로 변환
+      textWithBreaks = textWithBreaks.replace(/<\/p>/gi, '\n');
+      textWithBreaks = textWithBreaks.replace(/<\/div>/gi, '\n');
+      textWithBreaks = textWithBreaks.replace(/<\/h[1-6]>/gi, '\n');
+      textWithBreaks = textWithBreaks.replace(/<\/li>/gi, '\n');
+      textWithBreaks = textWithBreaks.replace(/<br\s*\/?>/gi, '\n');
+      textWithBreaks = textWithBreaks.replace(/<\/tr>/gi, '\n');
+      textWithBreaks = textWithBreaks.replace(/<\/td>/gi, ' ');
+
+      // 모든 HTML 태그 제거
+      textWithBreaks = textWithBreaks.replace(/<[^>]*>/g, '');
+
+      // HTML 엔티티 디코딩
+      textWithBreaks = textWithBreaks.replace(/&lt;/g, '<');
+      textWithBreaks = textWithBreaks.replace(/&gt;/g, '>');
+      textWithBreaks = textWithBreaks.replace(/&amp;/g, '&');
+      textWithBreaks = textWithBreaks.replace(/&quot;/g, '"');
+      textWithBreaks = textWithBreaks.replace(/&#39;/g, "'");
+      textWithBreaks = textWithBreaks.replace(/&nbsp;/g, ' ');
+
+      text = textWithBreaks;
+
+      // 연속된 줄바꿈을 최대 2개로 제한
+      text = text.replace(/\n{3,}/g, '\n\n');
+
+      // 시작과 끝의 줄바꿈 제거
+      text = text.replace(/^\n+|\n+$/g, '');
     } else {
       // body가 있으면 body에서, 없으면 전체 문서에서 텍스트 추출
       text =
@@ -101,7 +123,10 @@ export function extractText(
         '';
     }
 
-    return sanitizeText(text, options);
+    return sanitizeText(text, {
+      ...options,
+      preserveLineBreaks: options.preserveLineBreaks,
+    });
   } catch {
     return '';
   }
@@ -113,16 +138,22 @@ export function stripHtmlTags(html: string): string {
   }
 
   try {
-    const doc = parseDocument(html);
-    return (
-      doc.body?.textContent ||
-      doc.documentElement?.textContent ||
-      doc.textContent ||
-      ''
-    );
+    // linkedom이 self-closing 태그를 제대로 처리하지 못하는 경우가 있으므로
+    // 정규식으로 먼저 처리
+    let cleanHtml = html.replace(/<[^>]*>/g, '');
+
+    // HTML 엔티티 디코딩
+    cleanHtml = cleanHtml.replace(/&lt;/g, '<');
+    cleanHtml = cleanHtml.replace(/&gt;/g, '>');
+    cleanHtml = cleanHtml.replace(/&amp;/g, '&');
+    cleanHtml = cleanHtml.replace(/&quot;/g, '"');
+    cleanHtml = cleanHtml.replace(/&#39;/g, "'");
+    cleanHtml = cleanHtml.replace(/&nbsp;/g, ' ');
+
+    return cleanHtml.trim();
   } catch {
     // 파싱 실패 시 정규식으로 태그 제거
-    return html.replace(/<[^>]*>/g, '');
+    return html.replace(/<[^>]*>/g, '').trim();
   }
 }
 
@@ -273,8 +304,13 @@ export function sanitizeText(
     result = decode(result);
   }
 
-  // 여러 공백을 하나로 합치기
-  result = result.replace(/\s+/g, ' ');
+  // 여러 공백을 하나로 합치기 (줄바꿈 보존 옵션 고려)
+  if (options.preserveLineBreaks) {
+    // 줄바꿈은 보존하고 다른 공백만 합치기
+    result = result.replace(/[ \t]+/g, ' ');
+  } else {
+    result = result.replace(/\s+/g, ' ');
+  }
 
   // 앞뒤 공백 제거
   result = result.trim();

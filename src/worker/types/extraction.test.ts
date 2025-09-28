@@ -344,6 +344,7 @@ describe('Extraction Types Validation', () => {
           processingTime: 2500,
           platform: ContentPlatform.YOUTUBE,
           extractedFields: ['title', 'description', 'thumbnailUrl'],
+          timestamp: '2023-12-01T10:00:00.000Z',
         },
       };
 
@@ -364,6 +365,7 @@ describe('Extraction Types Validation', () => {
           processingTime: 50,
           platform: 'unknown',
           extractedFields: [],
+          timestamp: '2023-12-01T10:00:00.000Z',
         },
       };
 
