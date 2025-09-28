@@ -8,8 +8,9 @@
     "gen:cf": "wrangler types",
     "build": "vite build",
     "deploy": "wrangler deploy",
-    "lint": "eslint . && prettier --check . && tsc --noEmit",
+    "lint": "eslint . && prettier --check . && tsc --build",
     "lint:fix": "eslint . --fix && prettier --write .",
+    "lint:types": "tsc --build",
     "test": "vitest run",
     "test:watch": "vitest"
   },

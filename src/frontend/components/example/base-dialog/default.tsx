@@ -44,7 +44,7 @@ export default function BaseDialogDefault() {
     mode: 'onSubmit',
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  function onSubmit(_data: z.infer<typeof FormSchema>) {
     toast.custom((t) => (
       <Alert variant="mono" icon="primary" onClose={() => toast.dismiss(t)}>
         <AlertIcon>
