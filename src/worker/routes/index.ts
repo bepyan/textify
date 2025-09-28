@@ -1,23 +1,18 @@
 import { Hono } from 'hono';
-import { cors } from 'hono/cors';
-import { HTTPException } from 'hono/http-exception';
+import { hc } from 'hono/client';
 
-import api from './api';
+import extract from './api.extract';
 
-const app = new Hono();
-
-app.use('/api/*', cors());
-app.route('/api/', api);
-
-app.notFound((c) => {
-  return c.json({ message: 'Not Found', ok: false }, 404);
-});
-app.onError((err, c) => {
-  if (err instanceof HTTPException) {
-    return err.getResponse();
-  }
-
-  return c.json({ message: 'Internal Server Error', ok: false }, 500);
-});
+const app = new Hono().route('/api/extract', extract);
 
 export default app;
+
+type AppType = typeof app;
+
+// NOTE: assign the client to a variable to calculate the type when compiling
+const _client = hc<AppType>('');
+export type Client = typeof _client;
+
+export const hcWithType = (...args: Parameters<typeof hc>): Client => {
+  return hc<AppType>(...args);
+};
