@@ -1,5 +1,6 @@
 import { swaggerUI } from '@hono/swagger-ui';
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import { openAPIRouteHandler } from 'hono-openapi';
 
 import extract from './extract';
@@ -8,7 +9,6 @@ import {
   requestIdMiddleware,
   requestLoggingMiddleware,
   rateLimitMiddleware,
-  corsMiddleware,
   securityHeadersMiddleware,
   jsonParsingMiddleware,
 } from '../middleware/error-handler';
@@ -19,8 +19,17 @@ const app = new Hono();
 // Global Middleware
 // ============================================================================
 
-// 보안 및 CORS 헤더
-app.use('*', corsMiddleware());
+// CORS 설정
+app.use('*', cors({
+  origin: '*',
+  allowHeaders: ['Content-Type', 'Authorization', 'X-Request-ID'],
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  exposeHeaders: ['Content-Length', 'X-Request-ID'],
+  maxAge: 86400,
+  credentials: false,
+}));
+
+// 보안 헤더
 app.use('*', securityHeadersMiddleware());
 
 // 요청 ID 및 로깅

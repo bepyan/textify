@@ -314,38 +314,6 @@ export function rateLimitMiddleware(
   };
 }
 
-// ============================================================================
-// CORS Middleware
-// ============================================================================
-
-export function corsMiddleware() {
-  return async (c: Context, next: Next) => {
-    // Preflight 요청 처리
-    if (c.req.method === 'OPTIONS') {
-      c.header('Access-Control-Allow-Origin', '*');
-      c.header(
-        'Access-Control-Allow-Methods',
-        'GET, POST, PUT, DELETE, OPTIONS',
-      );
-      c.header(
-        'Access-Control-Allow-Headers',
-        'Content-Type, Authorization, X-Request-ID',
-      );
-      c.header('Access-Control-Max-Age', '86400');
-      return c.text('', 204 as never);
-    }
-
-    await next();
-
-    // 실제 요청에 CORS 헤더 추가
-    c.header('Access-Control-Allow-Origin', '*');
-    c.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    c.header(
-      'Access-Control-Allow-Headers',
-      'Content-Type, Authorization, X-Request-ID',
-    );
-  };
-}
 
 // ============================================================================
 // Security Headers Middleware
