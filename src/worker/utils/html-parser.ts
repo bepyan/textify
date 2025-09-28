@@ -7,8 +7,8 @@
 import { decode } from 'html-entities';
 import { parseHTML } from 'linkedom';
 
-// linkedom 타입 정의
-interface LinkedomDocument {
+// linkedom 타입 정의 - 다른 파일에서 재사용 가능하도록 export
+export interface LinkedomDocument {
   querySelector(selector: string): LinkedomElement | null;
   querySelectorAll(selector: string): LinkedomElement[];
   body?: LinkedomElement;
@@ -18,7 +18,7 @@ interface LinkedomDocument {
   textContent?: string | null;
 }
 
-interface LinkedomElement {
+export interface LinkedomElement {
   textContent?: string | null;
   outerHTML?: string;
   getAttribute(name: string): string | null;
@@ -27,13 +27,13 @@ interface LinkedomElement {
   remove(): void;
 }
 
-interface LinkedomWindow {
+export interface LinkedomWindow {
   document: LinkedomDocument;
 }
 
-// 타입 별칭
-type Document = LinkedomDocument;
-type Element = LinkedomElement;
+// 타입 별칭 - 다른 파일에서 재사용 가능하도록 export
+export type Document = LinkedomDocument;
+export type Element = LinkedomElement;
 
 // ============================================================================
 // Types and Interfaces

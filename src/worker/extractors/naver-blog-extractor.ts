@@ -17,28 +17,10 @@ import {
   extractText,
   extractImages,
   extractMetaTags,
+  type Document,
+  type Element,
 } from '../utils/html-parser';
 import { extractPostInfo } from '../utils/url-parser';
-
-// linkedom 타입 정의
-interface Document {
-  querySelector(selector: string): Element | null;
-  querySelectorAll(selector: string): Element[];
-  body?: Element;
-  head?: Element;
-  title?: string;
-  documentElement?: Element;
-  textContent?: string | null;
-}
-
-interface Element {
-  textContent?: string | null;
-  outerHTML?: string;
-  getAttribute(name: string): string | null;
-  querySelector(selector: string): Element | null;
-  querySelectorAll(selector: string): Element[];
-  remove(): void;
-}
 
 // ============================================================================
 // Naver Blog Extractor Implementation
