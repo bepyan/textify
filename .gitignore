@@ -9,6 +9,7 @@ coverage
 *.tsbuildinfo
 .tanstack
 .wrangler
+.eslintcache
 
 # logs
 logs
