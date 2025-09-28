@@ -19,6 +19,26 @@ import {
 } from '../utils/html-parser';
 import { extractVideoId } from '../utils/url-parser';
 
+// linkedom 타입 정의
+interface Document {
+  querySelector(selector: string): Element | null;
+  querySelectorAll(selector: string): Element[];
+  body?: Element;
+  head?: Element;
+  title?: string;
+  documentElement?: Element;
+  textContent?: string | null;
+}
+
+interface Element {
+  textContent?: string | null;
+  outerHTML?: string;
+  getAttribute(name: string): string | null;
+  querySelector(selector: string): Element | null;
+  querySelectorAll(selector: string): Element[];
+  remove(): void;
+}
+
 // ============================================================================
 // YouTube Extractor Implementation
 // ============================================================================
@@ -360,7 +380,7 @@ export class YouTubeExtractor extends BaseExtractor {
 
     // video:tag meta 태그들에서 추출
     const videoTags = doc.querySelectorAll('meta[property="video:tag"]');
-    videoTags.forEach((tag) => {
+    videoTags.forEach((tag: Element) => {
       const content = tag.getAttribute('content');
       if (content && content.trim()) {
         tags.push(content.trim());

@@ -20,6 +20,26 @@ import {
 } from '../utils/html-parser';
 import { extractPostInfo } from '../utils/url-parser';
 
+// linkedom 타입 정의
+interface Document {
+  querySelector(selector: string): Element | null;
+  querySelectorAll(selector: string): Element[];
+  body?: Element;
+  head?: Element;
+  title?: string;
+  documentElement?: Element;
+  textContent?: string | null;
+}
+
+interface Element {
+  textContent?: string | null;
+  outerHTML?: string;
+  getAttribute(name: string): string | null;
+  querySelector(selector: string): Element | null;
+  querySelectorAll(selector: string): Element[];
+  remove(): void;
+}
+
 // ============================================================================
 // Naver Blog Extractor Implementation
 // ============================================================================
@@ -210,10 +230,10 @@ export class NaverBlogExtractor extends BaseExtractor {
       if (element) {
         // script와 style 태그 제거
         const scripts = element.querySelectorAll('script, style');
-        scripts.forEach((script) => script.remove());
+        scripts.forEach((script: Element) => script.remove());
 
         // 텍스트 추출
-        content = extractText(element.outerHTML, {
+        content = extractText(element.outerHTML || '', {
           preserveLineBreaks: true,
           decodeEntities: true,
         });

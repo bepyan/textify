@@ -12,7 +12,7 @@ import {
   securityHeadersMiddleware,
   jsonParsingMiddleware,
 } from '../middleware/error-handler';
-import { contentCache } from '../utils/cache';
+// import { contentCache } from '../utils/cache'; // 현재 비활성화
 
 const app = new Hono();
 
@@ -60,7 +60,8 @@ app.route('/extract', extract);
  * GET /health - 전역 헬스 체크
  */
 app.get('/health', (c) => {
-  const cacheStats = contentCache.getStats();
+  // const cacheStats = contentCache.getStats(); // 현재 비활성화
+  const cacheStats = { hits: 0, misses: 0, entries: 0, hitRate: 0, memoryUsage: 0 };
 
   return c.json({
     status: 'healthy',
@@ -81,7 +82,8 @@ app.get('/health', (c) => {
  * GET /stats - 전역 통계 정보
  */
 app.get('/stats', (c) => {
-  const cacheStats = contentCache.getStats();
+  // const cacheStats = contentCache.getStats(); // 현재 비활성화
+  const cacheStats = { hits: 0, misses: 0, entries: 0, hitRate: 0, memoryUsage: 0 };
 
   return c.json({
     cache: cacheStats,
@@ -95,7 +97,7 @@ app.get('/stats', (c) => {
  * POST /cache/clear - 전역 캐시 비우기 (관리용)
  */
 app.post('/cache/clear', (c) => {
-  contentCache.clear();
+  // contentCache.clear(); // 현재 비활성화
 
   return c.json({
     success: true,
@@ -103,6 +105,10 @@ app.post('/cache/clear', (c) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// ----------------------------------------------------------------------------
+// Swagger UI and OpenAPI Schema
+// ----------------------------------------------------------------------------
 
 app.get(
   '/docs',

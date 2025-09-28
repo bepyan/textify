@@ -7,6 +7,34 @@
 import { decode } from 'html-entities';
 import { parseHTML } from 'linkedom';
 
+// linkedom 타입 정의
+interface LinkedomDocument {
+  querySelector(selector: string): LinkedomElement | null;
+  querySelectorAll(selector: string): LinkedomElement[];
+  body?: LinkedomElement;
+  head?: LinkedomElement;
+  title?: string;
+  documentElement?: LinkedomElement;
+  textContent?: string | null;
+}
+
+interface LinkedomElement {
+  textContent?: string | null;
+  outerHTML?: string;
+  getAttribute(name: string): string | null;
+  querySelector(selector: string): LinkedomElement | null;
+  querySelectorAll(selector: string): LinkedomElement[];
+  remove(): void;
+}
+
+interface LinkedomWindow {
+  document: LinkedomDocument;
+}
+
+// 타입 별칭
+type Document = LinkedomDocument;
+type Element = LinkedomElement;
+
 // ============================================================================
 // Types and Interfaces
 // ============================================================================
@@ -44,15 +72,15 @@ export interface ImageInfo {
 export function parseDocument(html: string): Document {
   if (!html || typeof html !== 'string') {
     // 빈 HTML 문서 생성
-    return parseHTML('<html><head></head><body></body></html>').document;
+    return (parseHTML('<html><head></head><body></body></html>') as LinkedomWindow).document;
   }
 
   try {
-    const { document } = parseHTML(html);
+    const { document } = parseHTML(html) as LinkedomWindow;
     return document;
   } catch {
     // 파싱 실패 시 빈 문서 반환
-    return parseHTML('<html><head></head><body></body></html>').document;
+    return (parseHTML('<html><head></head><body></body></html>') as LinkedomWindow).document;
   }
 }
 
@@ -69,7 +97,7 @@ export function extractText(
 
     // script와 style 태그 제거
     const scriptsAndStyles = doc.querySelectorAll('script, style');
-    scriptsAndStyles.forEach((element) => element.remove());
+    scriptsAndStyles.forEach((element: LinkedomElement) => element.remove());
 
     let text = '';
 
@@ -212,7 +240,7 @@ export function extractMetaTags(html: string): Record<string, string> {
     const metaTags = doc.querySelectorAll('meta');
     const result: Record<string, string> = {};
 
-    metaTags.forEach((meta) => {
+    metaTags.forEach((meta: LinkedomElement) => {
       const name = meta.getAttribute('name') || meta.getAttribute('property');
       const content = meta.getAttribute('content');
 
@@ -237,7 +265,7 @@ export function extractJsonLd(html: string): any[] {
     const scripts = doc.querySelectorAll('script[type="application/ld+json"]');
     const result: any[] = [];
 
-    scripts.forEach((script) => {
+    scripts.forEach((script: LinkedomElement) => {
       try {
         const content = script.textContent || '';
         if (content.trim()) {
@@ -405,7 +433,7 @@ export function extractTextFromElement(element: Element): string {
 export function removeScriptsAndStyles(doc: Document): void {
   try {
     const scriptsAndStyles = doc.querySelectorAll('script, style');
-    scriptsAndStyles.forEach((element) => element.remove());
+    scriptsAndStyles.forEach((element: LinkedomElement) => element.remove());
   } catch {
     // 무시
   }

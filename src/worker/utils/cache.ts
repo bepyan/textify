@@ -42,14 +42,19 @@ export class MemoryCache<T = unknown> {
     this.maxSize = maxSize;
     this.defaultTtl = defaultTtl;
 
-    // 주기적으로 만료된 항목 정리 (1분마다)
-    setInterval(() => this.cleanup(), 60000);
+    // Cloudflare Workers에서는 글로벌 스코프에서 setInterval 사용 불가
+    // 대신 get/set 시에 필요에 따라 cleanup 호출
   }
 
   /**
    * 캐시에서 값 가져오기
    */
   get(key: string): T | null {
+    // 가끔씩 정리 작업 수행 (10% 확률)
+    if (Math.random() < 0.1) {
+      this.cleanup();
+    }
+
     const entry = this.cache.get(key);
 
     if (!entry) {
@@ -285,7 +290,14 @@ export class ContentCache {
 // Singleton Instance
 // ============================================================================
 
-export const contentCache = new ContentCache();
+let _contentCache: ContentCache | null = null;
+
+export function getContentCache(): ContentCache {
+  if (!_contentCache) {
+    _contentCache = new ContentCache();
+  }
+  return _contentCache;
+}
 
 // ============================================================================
 // Cache Middleware
@@ -300,6 +312,7 @@ export function withCache<T extends unknown[], R extends ExtractedContent>(
     const key = keyGenerator(...args);
 
     // 캐시에서 확인
+    const contentCache = getContentCache();
     const cached = contentCache.get(key) as R | null;
     if (cached) {
       return cached;
@@ -335,6 +348,7 @@ export class CacheWarmer {
     const promises = this.popularUrls.map(async (url) => {
       try {
         const content = await extractor.extract(url);
+        const contentCache = getContentCache();
         contentCache.set(url, content, undefined, 3600000); // 1시간 TTL
         logger.debug(`Cache warmed for URL: ${url}`);
       } catch (error) {
@@ -349,4 +363,4 @@ export class CacheWarmer {
   }
 }
 
-export const cacheWarmer = new CacheWarmer();
+// export const cacheWarmer = new CacheWarmer(); // 현재 비활성화

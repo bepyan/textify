@@ -10,7 +10,7 @@ import {
   type ExtractedContent,
   type ExtractionOptions,
 } from '../types/extraction';
-import { contentCache } from '../utils/cache';
+// import { getContentCache } from '../utils/cache'; // 현재 비활성화
 import { logger } from '../utils/logger';
 
 // ============================================================================
@@ -48,16 +48,17 @@ export abstract class BaseExtractor {
       // 추출 옵션 병합
       const mergedOptions = this.mergeOptions(options);
 
-      // 캐시 확인
-      const cached = contentCache.get(url, mergedOptions);
-      if (cached) {
-        logger.debug('Cache hit for content extraction', {
-          url,
-          platform: this.platform,
-          processingTime: Date.now() - startTime,
-        });
-        return cached;
-      }
+      // 캐시 확인 (현재 비활성화 - Cloudflare Workers 호환성 문제)
+      // const contentCache = getContentCache();
+      // const cached = contentCache.get(url, mergedOptions);
+      // if (cached) {
+      //   logger.debug('Cache hit for content extraction', {
+      //     url,
+      //     platform: this.platform,
+      //     processingTime: Date.now() - startTime,
+      //   });
+      //   return cached;
+      // }
 
       // 실제 추출 로직 (하위 클래스에서 구현)
       const content = await this.performExtraction(url, mergedOptions);
@@ -65,8 +66,8 @@ export abstract class BaseExtractor {
       // 추출 시간 기록
       content.extractedAt = Date.now();
 
-      // 캐시에 저장 (성공한 경우에만)
-      contentCache.set(url, content, mergedOptions);
+      // 캐시에 저장 (현재 비활성화 - Cloudflare Workers 호환성 문제)
+      // contentCache.set(url, content, mergedOptions);
 
       // 처리 시간 로깅
       const processingTime = Date.now() - startTime;

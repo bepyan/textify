@@ -60,7 +60,7 @@ describe('HTML Parsing Utilities', () => {
       const doc = parseDocument(sampleHtml);
 
       expect(doc).toBeDefined();
-      expect(doc.title).toBe('테스트 페이지');
+      expect(doc.title || '').toBe('테스트 페이지');
     });
 
     it('should handle malformed HTML gracefully', () => {
@@ -253,7 +253,7 @@ describe('HTML Parsing Utilities', () => {
       const element = findElementBySelector(doc, 'h1');
 
       expect(element).toBeDefined();
-      expect(extractText(element!.outerHTML)).toBe('메인 제목');
+      expect(extractText(element!.outerHTML || '')).toBe('메인 제목');
     });
 
     it('should return null for non-existent selector', () => {
