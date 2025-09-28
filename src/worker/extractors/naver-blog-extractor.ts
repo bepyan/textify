@@ -75,7 +75,12 @@ export class NaverBlogExtractor extends BaseExtractor {
       }
 
       // 메타데이터 추출
-      const metadata = await this.extractBlogMetadata(html, postInfo, options);
+      const metadata = await this.extractBlogMetadata(
+        html,
+        postInfo,
+        options,
+        url,
+      );
 
       return {
         id: this.generateContentId(url),
@@ -128,12 +133,13 @@ export class NaverBlogExtractor extends BaseExtractor {
     html: string,
     postInfo: { authorId: string; postId: string },
     options: ExtractionOptions,
+    url: string,
   ) {
     const doc = parseDocument(html);
     const metaTags = extractMetaTags(html);
 
     // 기본 메타데이터 추출
-    const title = this.extractTitle(doc, metaTags);
+    const title = this.extractTitle(doc, metaTags, url);
     const content = this.extractContent(doc);
     const authorName = this.extractAuthorName(doc, metaTags, postInfo.authorId);
     const publishDate = this.extractPublishDate(doc, metaTags);
@@ -155,6 +161,7 @@ export class NaverBlogExtractor extends BaseExtractor {
   private extractTitle(
     doc: Document,
     metaTags: Record<string, string>,
+    url: string,
   ): string {
     // 우선순위: og:title > meta title > document title > 본문에서 첫 번째 제목
     let title = metaTags['og:title'] || metaTags['title'] || doc.title || '';
@@ -176,7 +183,8 @@ export class NaverBlogExtractor extends BaseExtractor {
 
     if (!title) {
       // 제목을 찾을 수 없는 경우 기본 제목 사용
-      title = `네이버 블로그 포스트 ${postInfo.postId}`;
+      const postInfo = extractPostInfo(url);
+      title = `네이버 블로그 포스트 ${postInfo?.postId || 'unknown'}`;
     }
 
     return title;

@@ -69,6 +69,7 @@ export interface ExtractionOptions {
   includeTags?: boolean;
   maxContentLength?: number;
   timeout?: number;
+  [key: string]: unknown;
 }
 
 export interface ExtractionRequest {
@@ -86,7 +87,7 @@ export interface ResponseMetadata {
 
 export interface ExtractionResponse {
   success: boolean;
-  data?: ExtractedContent;
+  data?: YouTubeContent | NaverBlogContent;
   error?: {
     type: string;
     message: string;
@@ -101,7 +102,6 @@ export interface ExtractionResponse {
 // ============================================================================
 
 // Base schemas
-const ContentPlatformSchema = z.enum(['youtube', 'naver_blog']);
 const ExtractionStatusSchema = z.enum(['success', 'partial', 'failed']);
 
 // Request schema

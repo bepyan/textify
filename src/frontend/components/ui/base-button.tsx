@@ -2,6 +2,7 @@ import { mergeProps } from '@base-ui-components/react/merge-props';
 import { useRender } from '@base-ui-components/react/use-render';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { ChevronDown, type LucideIcon } from 'lucide-react';
+import React from 'react';
 
 import { cn } from '@fe/lib/utils';
 

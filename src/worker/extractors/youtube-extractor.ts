@@ -156,7 +156,7 @@ export class YouTubeExtractor extends BaseExtractor {
   }
 
   private extractDescription(
-    doc: Document,
+    _doc: Document,
     metaTags: Record<string, string>,
   ): string {
     // 우선순위: og:description > meta description
@@ -180,7 +180,7 @@ export class YouTubeExtractor extends BaseExtractor {
 
   private extractChannelInfo(
     doc: Document,
-    metaTags: Record<string, string>,
+    _metaTags: Record<string, string>,
   ): { name: string; id: string } {
     // 채널명 추출
     let channelName = '';
@@ -228,7 +228,7 @@ export class YouTubeExtractor extends BaseExtractor {
   }
 
   private extractUploadDate(
-    doc: Document,
+    _doc: Document,
     metaTags: Record<string, string>,
     jsonLdData: any[],
   ): number {
@@ -257,7 +257,7 @@ export class YouTubeExtractor extends BaseExtractor {
   }
 
   private extractDuration(
-    doc: Document,
+    _doc: Document,
     metaTags: Record<string, string>,
     jsonLdData: any[],
   ): string {
