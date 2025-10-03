@@ -50,7 +50,7 @@ export function TextifyPromptInput({
         onSubmit={() => handleSubmit()}
         className="w-full max-w-(--breakpoint-md)"
       >
-        <PromptInputTextarea placeholder="링크를 입력해주세요..." />
+        <PromptInputTextarea autoFocus placeholder="링크를 입력해주세요..." />
         <PromptInputActions className="justify-end pt-2">
           <PromptInputAction tooltip={'정보 추출하기'}>
             <Button
