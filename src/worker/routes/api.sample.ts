@@ -1,5 +1,7 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 
+import { ErrorSchema, getValidationErrorResponse } from '@be/utils/error';
+
 // ============================================================================
 // Schema
 // ============================================================================
@@ -30,15 +32,6 @@ const UserSchema = z
     }),
   })
   .openapi('User');
-
-const ErrorSchema = z.object({
-  code: z.number().openapi({
-    example: 400,
-  }),
-  message: z.string().openapi({
-    example: 'Bad Request',
-  }),
-});
 
 // ============================================================================
 // Route
@@ -92,13 +85,7 @@ const app = new OpenAPIHono()
     },
     (result, c) => {
       if (!result.success) {
-        return c.json(
-          {
-            code: 400,
-            message: 'Validation Error',
-          },
-          400,
-        );
+        return c.json(getValidationErrorResponse(result.error), 400);
       }
     },
   );
