@@ -1,8 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import { LogoIcon } from '@fe/components/icons';
-import { Button } from '@fe/components/ui/button';
-import { Skeleton } from '@fe/components/ui/skeleton';
+import { Button, Skeleton } from '@fe/components/ui';
 import { client } from '@fe/lib/api';
 
 export const Route = createFileRoute('/sample')({
@@ -24,7 +23,9 @@ function Page() {
     <main className="h-full w-full">
       <div className="flex h-full max-h-[920px] min-h-[400px] w-full flex-col items-center justify-center gap-4">
         <LogoIcon className="size-8 fill-current" />
-        <Button onClick={handleSubmit}>Submit</Button>
+        <Button variant="mono" onClick={handleSubmit}>
+          Submit
+        </Button>
       </div>
       <Skeleton className="size-full" />
     </main>

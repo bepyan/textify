@@ -3,14 +3,14 @@
 import { ArrowUp } from 'lucide-react';
 import { useState } from 'react';
 
-import { Button } from '@fe/components/ui/button';
 import {
+  Button,
   PromptInput,
   PromptInputAction,
   PromptInputActions,
   PromptInputTextarea,
-} from '@fe/components/ui/prompt-input';
-import { PromptSuggestion } from '@fe/components/ui/prompt-suggestion';
+  PromptSuggestion,
+} from '@fe/components/ui';
 import { cn } from '@fe/lib/utils';
 
 const howToPrompts = [

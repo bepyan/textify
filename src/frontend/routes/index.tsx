@@ -3,8 +3,7 @@ import { useState } from 'react';
 
 import { LogoIcon } from '@fe/components/icons';
 import { TextifyPromptInput } from '@fe/components/textify-prompt-input';
-import { Button } from '@fe/components/ui/button';
-import { Skeleton } from '@fe/components/ui/skeleton';
+import { Button, Skeleton } from '@fe/components/ui';
 import { copyToClipboard } from '@fe/lib/copy';
 import { useExtractMutation } from '@fe/lib/extractor';
 
