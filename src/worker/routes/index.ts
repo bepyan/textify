@@ -2,6 +2,7 @@ import { swaggerUI } from '@hono/swagger-ui';
 import { OpenAPIHono } from '@hono/zod-openapi';
 import { HTTPException } from 'hono/http-exception';
 
+import extractNaver from './api.extract.naver';
 import sample from './api.sample';
 
 // ============================================================================
@@ -10,7 +11,8 @@ import sample from './api.sample';
 
 const app = new OpenAPIHono()
   ///////////////////////////////////////////////////////////////////////////
-  .route('/api/sample', sample);
+  .route('/api/sample', sample)
+  .route('/api/extract/naver', extractNaver);
 
 // ============================================================================
 // Docs
