@@ -1,6 +1,6 @@
 import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
 
-import { createStandardNaverBlogUrl } from '@be/lib/naver-extractor';
+import { extractNaverBlogContent } from '@be/lib/naver-extractor';
 import { ErrorSchema, getValidationErrorResponse } from '@be/utils/error';
 
 // ============================================================================
@@ -8,22 +8,22 @@ import { ErrorSchema, getValidationErrorResponse } from '@be/utils/error';
 // ============================================================================
 
 const ParamsSchema = z.object({
-  userId: z
+  blogId: z
     .string()
     .min(3)
     .openapi({
       param: {
-        name: 'userId',
+        name: 'blogId',
         in: 'query',
       },
       example: 'ranto28',
     }),
-  postId: z
+  logNo: z
     .string()
     .min(3)
     .openapi({
       param: {
-        name: 'postId',
+        name: 'logNo',
         in: 'query',
       },
       example: '224028693561',
@@ -77,19 +77,12 @@ const app = new OpenAPIHono()
   ///////////////////////////////////////////////////////////////////////////////
   .openapi(
     route,
-    (c) => {
-      const { userId, postId } = c.req.valid('query');
+    async (c) => {
+      const { blogId, logNo } = c.req.valid('query');
 
-      const standardUrl = createStandardNaverBlogUrl(userId, postId);
+      const content = await extractNaverBlogContent({ blogId, logNo });
 
-      // TODO: craw data from standardUrl
-
-      return c.json(
-        {
-          content: standardUrl,
-        },
-        200,
-      );
+      return c.json({ content }, 200);
     },
     (result, c) => {
       if (!result.success) {

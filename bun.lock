@@ -17,6 +17,7 @@
         "clsx": "^2.1.1",
         "hono": "^4.9.9",
         "lucide-react": "^0.544.0",
+        "mdream": "^0.12.3",
         "motion": "^12.23.22",
         "radix-ui": "^1.4.3",
         "react": "^19.1.1",
@@ -1071,6 +1072,8 @@
     "magic-string": ["magic-string@0.30.19", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.5" } }, "sha512-2N21sPY9Ws53PZvsEpVtNuSW+ScYbQdp4b9qUaL+9QkHUrGFKo56Lg9Emg5s9V/qrtNBmiR01sYhUOwu3H+VOw=="],
 
     "math-intrinsics": ["math-intrinsics@1.1.0", "", {}, "sha512-/IXtbwEk5HTPyEwyKX6hGkYXxM9nbj64B+ilVJnC/R6B0pH5G4V3b0pVbL7DBj4tkhBAppbQUlf6F6Xl9LHu1g=="],
+
+    "mdream": ["mdream@0.12.3", "", { "dependencies": { "cac": "^6.7.14", "pathe": "^2.0.3", "tinyglobby": "^0.2.15" }, "bin": { "mdream": "bin/mdream.mjs" } }, "sha512-HMw+1sp8zhemA6UGOehhKSEyNDWaOfxQ3IgkUYHZat69ZOwMN4YJ2AY1To+qg8CYC9yx30Ymsz09gqnfg6W1Gg=="],
 
     "merge2": ["merge2@1.4.1", "", {}, "sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg=="],
 

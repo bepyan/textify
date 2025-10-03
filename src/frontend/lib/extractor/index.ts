@@ -18,8 +18,8 @@ export function useExtractMutation() {
 
           const result = await client.api.extract.naver.$get({
             query: {
-              userId: naverBlogInfo.blogId,
-              postId: naverBlogInfo.logNo,
+              blogId: naverBlogInfo.blogId,
+              logNo: naverBlogInfo.logNo,
             },
           });
 

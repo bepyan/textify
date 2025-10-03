@@ -1,13 +1,21 @@
-/**
- * blogId와 logNo를 받아 표준화된 네이버 블로그 URL을 생성합니다.
- *
- * @param blogId - 블로그 ID
- * @param logNo - 게시글 번호
- * @returns 표준화된 네이버 블로그 URL
- */
-export function createStandardNaverBlogUrl(
-  blogId: string,
-  logNo: string,
-): string {
-  return `https://blog.naver.com/PostView.naver?blogId=${blogId}&logNo=${logNo}`;
+import * as cheerio from 'cheerio';
+import { htmlToMarkdown } from 'mdream';
+
+export async function extractNaverBlogContent({
+  blogId,
+  logNo,
+}: {
+  blogId: string;
+  logNo: string;
+}): Promise<string> {
+  const url = `https://blog.naver.com/PostView.naver?blogId=${blogId}&logNo=${logNo}`;
+
+  const response = await fetch(url);
+  const html = await response.text();
+
+  const $ = cheerio.load(html);
+  const title = $('.se-title-text').html();
+  const content = $('.se-main-container').html();
+
+  return htmlToMarkdown(`${title}${content}`);
 }
