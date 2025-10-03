@@ -4,6 +4,8 @@ import { client } from '@fe/lib/api';
 
 import { detectPlatform } from './detect-platform';
 import { parseNaverBlogUrl } from './naver-blog-url-pharser';
+import { extractYouTubeTranscriptInBrowser } from './youtube-extractor';
+import { parseYouTubeUrl } from './youtube-url-parser';
 
 export function useExtractMutation() {
   return useMutation({
@@ -31,7 +33,16 @@ export function useExtractMutation() {
           return data.content;
         }
         case 'youtube': {
-          return null;
+          const youtubeVideoInfo = parseYouTubeUrl(url);
+          if (!youtubeVideoInfo) {
+            return null;
+          }
+
+          // 프론트엔드에서 직접 추출 (서버에서는 유튜브가 차단함)
+          const content = await extractYouTubeTranscriptInBrowser(
+            youtubeVideoInfo.videoId,
+          );
+          return content;
         }
         case 'unknown': {
           return null;
