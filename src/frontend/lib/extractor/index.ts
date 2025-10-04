@@ -4,7 +4,6 @@ import { client } from '@fe/lib/api';
 
 import { detectPlatform } from './detect-platform';
 import { parseNaverBlogUrl } from './naver-blog-url-pharser';
-import { extractYouTubeTranscriptInBrowser } from './youtube-extractor';
 import { parseYouTubeUrl } from './youtube-url-parser';
 
 export function useExtractMutation() {
@@ -38,11 +37,20 @@ export function useExtractMutation() {
             return null;
           }
 
-          // 프론트엔드에서 직접 추출 (서버에서는 유튜브가 차단함)
-          const content = await extractYouTubeTranscriptInBrowser(
-            youtubeVideoInfo.videoId,
-          );
-          return content;
+          // 1. 서버에서 영상 정보 및 자막 트랙 정보 가져오기
+          const result = await client.api.extract.youtube.$get({
+            query: {
+              videoId: youtubeVideoInfo.videoId,
+            },
+          });
+
+          if (!result.ok) {
+            return null;
+          }
+
+          const videoInfo = await result.json();
+
+          return videoInfo;
         }
         case 'unknown': {
           return null;

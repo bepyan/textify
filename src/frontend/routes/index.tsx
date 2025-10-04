@@ -17,7 +17,7 @@ function Page() {
 
   const handleSubmit = async (value: string) => {
     const result = await extractMutation.mutateAsync(value);
-    setContent(result);
+    setContent(JSON.stringify(result, null, 2));
   };
 
   return (

@@ -3,6 +3,7 @@ import { OpenAPIHono } from '@hono/zod-openapi';
 import { HTTPException } from 'hono/http-exception';
 
 import extractNaver from './api.extract.naver';
+import extractYoutube from './api.extract.youtube';
 import sample from './api.sample';
 
 // ============================================================================
@@ -12,7 +13,8 @@ import sample from './api.sample';
 const app = new OpenAPIHono()
   ///////////////////////////////////////////////////////////////////////////
   .route('/api/sample', sample)
-  .route('/api/extract/naver', extractNaver);
+  .route('/api/extract/naver', extractNaver)
+  .route('/api/extract/youtube', extractYoutube);
 
 // ============================================================================
 // Docs
