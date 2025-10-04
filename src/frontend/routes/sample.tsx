@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { LogoIcon } from '@fe/components/icons';
-import { Button, Skeleton } from '@fe/components/ui';
+import { Button, Skeleton, LogoIcon } from '@fe/components/ui';
 import { client } from '@fe/lib/api';
 
 export const Route = createFileRoute('/sample')({

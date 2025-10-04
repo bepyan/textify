@@ -7,11 +7,9 @@ const RootLayout = () => (
   <Providers>
     <div className="text-foreground bg-background isolate font-sans antialiased">
       <Gnb />
-      <div className="grid min-h-dvh">
-        <div className="pt-header relative container mx-auto">
-          <Outlet />
-        </div>
-      </div>
+      <main className="flex h-dvh w-full flex-col">
+        <Outlet />
+      </main>
     </div>
   </Providers>
 );

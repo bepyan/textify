@@ -9,12 +9,6 @@ import React, {
 } from 'react';
 
 import { Textarea } from '@fe/components/ui/textarea';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@fe/components/ui/tooltip';
 import { cn } from '@fe/lib/utils';
 
 type PromptInputContextType = {
@@ -73,28 +67,26 @@ function PromptInput({
   };
 
   return (
-    <TooltipProvider>
-      <PromptInputContext.Provider
-        value={{
-          isLoading,
-          value: value ?? internalValue,
-          setValue: onValueChange ?? handleChange,
-          maxHeight,
-          onSubmit,
-          textareaRef,
-        }}
+    <PromptInputContext.Provider
+      value={{
+        isLoading,
+        value: value ?? internalValue,
+        setValue: onValueChange ?? handleChange,
+        maxHeight,
+        onSubmit,
+        textareaRef,
+      }}
+    >
+      <div
+        className={cn(
+          'border-input bg-background flex w-full cursor-text flex-col gap-2 rounded-3xl border p-3 shadow-xs',
+          className,
+        )}
+        onClick={() => textareaRef.current?.focus()}
       >
-        <div
-          className={cn(
-            'border-input bg-background cursor-text rounded-3xl border p-2 shadow-xs',
-            className,
-          )}
-          onClick={() => textareaRef.current?.focus()}
-        >
-          {children}
-        </div>
-      </PromptInputContext.Provider>
-    </TooltipProvider>
+        {children}
+      </div>
+    </PromptInputContext.Provider>
   );
 }
 
@@ -137,7 +129,7 @@ function PromptInputTextarea({
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={handleKeyDown}
       className={cn(
-        'text-foreground min-h-[44px] w-full resize-none border-none bg-transparent shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
+        'text-foreground min-h-[44px] w-full resize-none border-none bg-transparent p-0 text-base shadow-none outline-none focus-visible:ring-0 focus-visible:ring-offset-0',
         className,
       )}
       rows={1}
@@ -155,47 +147,13 @@ function PromptInputActions({
   ...props
 }: PromptInputActionsProps) {
   return (
-    <div className={cn('flex items-center gap-2', className)} {...props}>
+    <div
+      className={cn('flex items-center justify-between gap-2', className)}
+      {...props}
+    >
       {children}
     </div>
   );
 }
 
-type PromptInputActionProps = {
-  className?: string;
-  tooltip: React.ReactNode;
-  children: React.ReactNode;
-  side?: 'top' | 'bottom' | 'left' | 'right';
-} & React.ComponentProps<typeof Tooltip>;
-
-function PromptInputAction({
-  tooltip,
-  children,
-  className,
-  side = 'top',
-  ...props
-}: PromptInputActionProps) {
-  const { disabled } = usePromptInput();
-
-  return (
-    <Tooltip {...props}>
-      <TooltipTrigger
-        asChild
-        disabled={disabled}
-        onClick={(event) => event.stopPropagation()}
-      >
-        {children}
-      </TooltipTrigger>
-      <TooltipContent side={side} className={className}>
-        {tooltip}
-      </TooltipContent>
-    </Tooltip>
-  );
-}
-
-export {
-  PromptInput,
-  PromptInputTextarea,
-  PromptInputActions,
-  PromptInputAction,
-};
+export { PromptInput, PromptInputTextarea, PromptInputActions };

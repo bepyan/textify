@@ -22,11 +22,7 @@ function PromptSuggestion({
     <Button
       variant={variant || 'ghost'}
       size={size || 'sm'}
-      className={cn(
-        'w-full cursor-pointer justify-start gap-0 rounded-xl py-2',
-        'hover:bg-accent',
-        className,
-      )}
+      className={cn('justify-start rounded-xl py-2', className)}
       {...props}
     >
       <span className="text-muted-foreground whitespace-pre-wrap">

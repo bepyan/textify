@@ -8,7 +8,7 @@ import { parseYouTubeUrl } from './youtube-url-parser';
 
 export function useExtractMutation() {
   return useMutation({
-    mutationFn: async (url: string) => {
+    mutationFn: async (url: string): Promise<string | null> => {
       const platform = detectPlatform(url);
       switch (platform) {
         case 'naver': {
@@ -48,7 +48,7 @@ export function useExtractMutation() {
           }
 
           const videoInfo = await result.json();
-          return videoInfo;
+          return JSON.stringify(videoInfo, null, 2);
         }
         case 'unknown': {
           return null;
