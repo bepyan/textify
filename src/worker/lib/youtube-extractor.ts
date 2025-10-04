@@ -9,12 +9,11 @@ export class YouTubeExtractor {
   // Core
   // ----------------------------------------------------------------------------
 
-  static async getVideoInfo(videoId: string) {
+  static async getVideoData(videoId: string) {
     // 1. Fetch HTML
     const html = await this.fetchHtml(videoId);
 
     // 2. Extract Data
-    const title = this.extractTitle(html);
     const apiKey = this.extractApiKey(html);
     if (!apiKey) {
       throw new Error('Crawled HTML does not contain apiKey');
@@ -22,22 +21,24 @@ export class YouTubeExtractor {
 
     // 3. Fetch Detail
     const detailData = await this.fetchDetail(videoId, apiKey);
-    const captionTracks =
-      detailData.captions.playerCaptionsTracklistRenderer.captionTracks;
-    const targetCaptionTrack = this.getTargetCaptionTrack(captionTracks);
-
-    // 4. Fetch Caption Tracks
-    const captionData = await this.fetchCaptionTracks(
-      targetCaptionTrack.baseUrl,
+    const captionTrack = this.getTargetCaptionTrack(
+      detailData.captions.playerCaptionsTracklistRenderer.captionTracks,
     );
 
+    // 4. Fetch Caption Tracks
+    const captionData = await this.fetchCaptionTracks(captionTrack.baseUrl);
+
     // 5. Return
-    return { title, captionTracks, captionData };
+    return {
+      info: detailData.videoDetails,
+      captionTrack,
+      captionData,
+    };
   }
 
   private static getTargetCaptionTrack(captionTracks: YoutubeCaptionTrack[]) {
-    console.log(captionTracks);
     return (
+      // Manually uploaded korean caption
       captionTracks.find((track) => track.vssId === '.ko') ||
       captionTracks.find((track) => track.languageCode === 'en') ||
       captionTracks[0]
@@ -113,15 +114,6 @@ export class YouTubeExtractor {
   // Data Extraction
   // ----------------------------------------------------------------------------
 
-  private static extractTitle(html: string) {
-    const titleMatch = html.match(/<title>([^<]+)<\/title>/);
-    if (!titleMatch) {
-      console.error('No title found');
-      return null;
-    }
-    return titleMatch[1].replace(' - YouTube', '').trim();
-  }
-
   private static extractApiKey(html: string) {
     const apiKeyMatch = html.match(/"INNERTUBE_API_KEY":\s*"([a-zA-Z0-9_-]+)/);
     if (!apiKeyMatch) {
@@ -130,6 +122,15 @@ export class YouTubeExtractor {
     }
     return apiKeyMatch[1];
   }
+
+  // private static extractTitle(html: string) {
+  //   const titleMatch = html.match(/<title>([^<]+)<\/title>/);
+  //   if (!titleMatch) {
+  //     console.error('No title found');
+  //     return null;
+  //   }
+  //   return titleMatch[1].replace(' - YouTube', '').trim();
+  // }
 
   // /**
   //  * @deprecated - Crawled caption tracks URL is invalid.

@@ -20,41 +20,70 @@ const ParamsSchema = z.object({
     }),
 });
 
-const CaptionTrackSchema = z.object({
-  baseUrl: z.string(),
-  languageCode: z.string(),
-  name: z
-    .object({
-      simpleText: z.string().optional(),
-    })
-    .optional(),
-});
-
 const ResultSchema = z
   .object({
-    title: z.string().nullable().openapi({
-      example: 'YouTube Video Title',
-    }),
-    captionTracks: z.array(CaptionTrackSchema).openapi({
-      example: [
-        {
-          baseUrl: 'https://www.youtube.com/api/timedtext?...',
-          languageCode: 'ko',
-          name: { simpleText: '한국어' },
-        },
-      ],
-    }),
-    captionData: z.object({
-      events: z.array(
-        z.object({
-          segs: z.array(
+    info: z
+      .object({
+        videoId: z.string(),
+        channelId: z.string(),
+        author: z.string(),
+        title: z.string(),
+        lengthSeconds: z.string(),
+        keywords: z.array(z.string()),
+        viewCount: z.string(),
+        thumbnail: z.object({
+          thumbnails: z.array(
             z.object({
-              utf8: z.string(),
+              url: z.string(),
+              width: z.number(),
+              height: z.number(),
             }),
           ),
         }),
-      ),
-    }),
+      })
+      .openapi({
+        example: {
+          videoId: 'utImgpthqoo',
+          channelId: 'UC_x5XG1OV2P6uZZ5FSM9Ttw',
+          author: '슈카월드',
+          title: "'이민자를 추방하라', 유럽에 부는 반이민 열풍",
+          keywords: ['슈카', '슈카월드', '경제'],
+          lengthSeconds: '1240',
+          viewCount: '488830',
+          thumbnail: {
+            thumbnails: [
+              {
+                url: 'https://i.ytimg.com/vi/utImgpthqoo/default.jpg',
+                width: 120,
+                height: 90,
+              },
+            ],
+          },
+        },
+      }),
+    caption: z
+      .object({
+        events: z.array(
+          z.object({
+            segs: z.array(
+              z.object({
+                utf8: z.string(),
+              }),
+            ),
+          }),
+        ),
+      })
+      .openapi({
+        example: {
+          events: [
+            {
+              tStartMs: 34180,
+              dDurationMs: 1720,
+              segs: [{ utf8: '다음 주제는 더 웃지 못할 주제네' }],
+            },
+          ],
+        },
+      }),
   })
   .openapi('YouTubeVideoInfo');
 
@@ -108,9 +137,15 @@ const app = new OpenAPIHono()
     async (c) => {
       const { videoId } = c.req.valid('query');
 
-      const videoInfo = await YouTubeExtractor.getVideoInfo(videoId);
+      const videoData = await YouTubeExtractor.getVideoData(videoId);
 
-      return c.json(videoInfo, 200);
+      return c.json(
+        {
+          info: videoData.info,
+          caption: videoData.captionData,
+        },
+        200,
+      );
     },
     (result, c) => {
       if (!result.success) {

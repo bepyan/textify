@@ -52,13 +52,19 @@ export interface YoutubeVideoDetails {
   isOwnerViewing: boolean;
   shortDescription: string;
   isCrawlable: boolean;
-  thumbnail: { thumbnails: unknown[] };
+  thumbnail: { thumbnails: YoutubeThumbnail[] };
   allowRatings: boolean;
   viewCount: string; // '488830'
   author: string;
   isPrivate: boolean;
   isUnpluggedCorpus: boolean;
   isLiveContent: boolean;
+}
+
+export interface YoutubeThumbnail {
+  url: string;
+  width: number;
+  height: number;
 }
 
 // ============================================================================
