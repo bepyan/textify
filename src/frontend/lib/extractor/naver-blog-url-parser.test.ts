@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseNaverBlogUrl } from './naver-blog-url-pharser';
+import { parseNaverBlogUrl } from './naver-blog-url-parser';
 
 describe('parseNaverBlogUrl', () => {
   describe('유효한 URL 파싱', () => {

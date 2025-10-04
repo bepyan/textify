@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { client } from '@fe/lib/api';
 
 import { detectPlatform } from './detect-platform';
-import { parseNaverBlogUrl } from './naver-blog-url-pharser';
+import { parseNaverBlogUrl } from './naver-blog-url-parser';
 import { parseYouTubeUrl } from './youtube-url-parser';
 
 export function useExtractMutation() {
@@ -37,7 +37,6 @@ export function useExtractMutation() {
             return null;
           }
 
-          // 1. 서버에서 영상 정보 및 자막 트랙 정보 가져오기
           const result = await client.api.extract.youtube.$get({
             query: {
               videoId: youtubeVideoInfo.videoId,
@@ -49,7 +48,6 @@ export function useExtractMutation() {
           }
 
           const videoInfo = await result.json();
-
           return videoInfo;
         }
         case 'unknown': {
