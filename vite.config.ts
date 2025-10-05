@@ -7,8 +7,6 @@ import react from '@vitejs/plugin-react-swc';
 import { defineConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
-const isDev = process.env.NODE_ENV === 'development';
-
 export default defineConfig({
   plugins: [
     tailwindcss(),
@@ -18,9 +16,7 @@ export default defineConfig({
     }),
     react(),
     tsconfigPaths(),
-    cloudflare({
-      configPath: isDev ? 'wrangler.local.json' : 'wrangler.json',
-    }),
+    cloudflare(),
   ],
   server: {
     port: 8787,
