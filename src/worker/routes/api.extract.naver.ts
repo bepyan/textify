@@ -1,6 +1,7 @@
-import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
+import { createRoute, z } from '@hono/zod-openapi';
 
 import { extractNaverBlogContent } from '@be/lib/naver-extractor';
+import { TextifyHono } from '@be/lib/textify-hono';
 import { ErrorSchema, getValidationErrorResponse } from '@be/utils/error';
 
 // ============================================================================
@@ -73,16 +74,25 @@ const route = createRoute({
 // App
 // ============================================================================
 
-const app = new OpenAPIHono()
+const app = new TextifyHono()
   ///////////////////////////////////////////////////////////////////////////////
   .openapi(
     route,
     async (c) => {
       const { blogId, logNo } = c.req.valid('query');
 
+      const cacheKey = `naver:${blogId}:${logNo}`;
+      const cachedResult = await c.env.KV.get(cacheKey);
+      if (cachedResult) {
+        return c.json(JSON.parse(cachedResult), 200);
+      }
+
       const content = await extractNaverBlogContent({ blogId, logNo });
 
-      return c.json({ content }, 200);
+      const result = { content };
+      await c.env.KV.put(cacheKey, JSON.stringify(result));
+
+      return c.json(result, 200);
     },
     (result, c) => {
       if (!result.success) {

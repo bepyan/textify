@@ -1,5 +1,6 @@
-import { createRoute, OpenAPIHono, z } from '@hono/zod-openapi';
+import { createRoute, z } from '@hono/zod-openapi';
 
+import { TextifyHono } from '@be/lib/textify-hono';
 import { YouTubeExtractor } from '@be/lib/youtube-extractor';
 import { ErrorSchema, getValidationErrorResponse } from '@be/utils/error';
 
@@ -132,22 +133,28 @@ const route = createRoute({
 // App
 // ============================================================================
 
-const app = new OpenAPIHono()
+const app = new TextifyHono()
   ///////////////////////////////////////////////////////////////////////////////
   .openapi(
     route,
     async (c) => {
       const { videoId } = c.req.valid('query');
 
+      const cacheKey = `youtube:${videoId}`;
+      const cachedResult = await c.env.KV.get(cacheKey);
+      if (cachedResult) {
+        return c.json(JSON.parse(cachedResult), 200);
+      }
+
       const videoData = await YouTubeExtractor.getVideoData(videoId);
 
-      return c.json(
-        {
-          info: videoData.info,
-          caption: videoData.captionData,
-        },
-        200,
-      );
+      const result = {
+        info: videoData.info,
+        caption: videoData.captionData,
+      };
+      await c.env.KV.put(cacheKey, JSON.stringify(result));
+
+      return c.json(result, 200);
     },
     (result, c) => {
       if (!result.success) {
