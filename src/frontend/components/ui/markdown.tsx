@@ -56,6 +56,13 @@ const INITIAL_COMPONENTS: Partial<Components> = {
   pre: function PreComponent({ children }) {
     return <>{children}</>;
   },
+  ol: function OrderedListComponent({ children, start = 1 }) {
+    return (
+      <ol start={start}>
+        {start}. {children}
+      </ol>
+    );
+  },
 };
 
 const MemoizedMarkdownBlock = memo(

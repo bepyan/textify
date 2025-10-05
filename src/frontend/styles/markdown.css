@@ -1,0 +1,17 @@
+.prose {
+  @apply text-foreground tracking-wide break-words whitespace-normal;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  @apply font-bold;
+}
+
+.prose ol li {
+  display: inline;
+}
+
+.prose b {
+  @apply font-bold;
+}

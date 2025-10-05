@@ -1,4 +1,5 @@
 @import './theme.css';
+@import './markdown.css';
 
 :root {
   --header-h: 3.375rem;
@@ -6,6 +7,8 @@
 }
 
 @theme {
+  --font-sans: 'Pretendard Variable', sans-serif;
+
   --spacing-header: var(--header-h);
   --spacing-footer: var(--footer-h);
   --spacing-safe-offset: calc(

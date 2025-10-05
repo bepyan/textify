@@ -10,6 +10,7 @@ export function useExtractMutation() {
   return useMutation({
     mutationFn: async (url: string): Promise<string | null> => {
       const platform = detectPlatform(url);
+
       switch (platform) {
         case 'naver': {
           const naverBlogInfo = parseNaverBlogUrl(url);
@@ -48,7 +49,20 @@ export function useExtractMutation() {
           }
 
           const videoInfo = await result.json();
-          return JSON.stringify(videoInfo, null, 2);
+          const videoLength = msToTime(
+            parseInt(videoInfo.info.lengthSeconds) * 1000,
+          );
+          let content = `# ${videoInfo.info.title}\n${videoInfo.info.author} ${videoLength}\n\n\n`;
+
+          content += videoInfo.caption.events
+            .map((event) => {
+              return event.segs
+                .map((seg) => `${msToTime(event.tStartMs)} ${seg.utf8}`)
+                .join(' ');
+            })
+            .join('\n');
+
+          return content;
         }
         case 'unknown': {
           return null;
@@ -56,4 +70,14 @@ export function useExtractMutation() {
       }
     },
   });
+}
+
+// ============================================================================
+// Helpers
+// ============================================================================
+
+function msToTime(ms: number) {
+  const seconds = Math.floor((ms / 1000) % 60);
+  const minutes = Math.floor(ms / 60 / 1000);
+  return `${minutes}:${seconds}`;
 }

@@ -7,26 +7,22 @@ import React from 'react';
 import { cn } from '@fe/lib/utils';
 
 const buttonVariants = cva(
-  'group ring-offset-background inline-flex cursor-pointer items-center justify-center text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-60 has-data-[arrow=true]:justify-between [&_svg]:shrink-0',
+  [
+    'group ring-offset-background inline-flex cursor-pointer items-center justify-center text-sm font-medium whitespace-nowrap focus-visible:outline-hidden disabled:pointer-events-none',
+    'transition-[color,box-shadow,transform,scale] duration-250 ease-in-out hover:scale-98 active:scale-98',
+    'disabled:opacity-60 has-data-[arrow=true]:justify-between [&_svg]:shrink-0',
+  ],
   {
     variants: {
       variant: {
-        primary:
-          'bg-primary text-primary-foreground hover:bg-primary/90 data-[state=open]:bg-primary/90',
-        mono: 'bg-zinc-950 text-white hover:bg-zinc-950/90 data-[state=open]:bg-zinc-950/90 dark:bg-zinc-300 dark:text-black dark:hover:bg-zinc-300/90 dark:data-[state=open]:bg-zinc-300/90',
-        destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive/90 data-[state=open]:bg-destructive/90',
-        secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary/90 data-[state=open]:bg-secondary/90',
-        outline:
-          'bg-background text-accent-foreground border-input hover:bg-accent data-[state=open]:bg-accent border',
-        dashed:
-          'text-accent-foreground border-input bg-background hover:bg-accent hover:text-accent-foreground data-[state=open]:text-accent-foreground border border-dashed',
-        ghost:
-          'text-accent-foreground hover:bg-accent hover:text-accent-foreground data-[state=open]:bg-accent data-[state=open]:text-accent-foreground',
-        dim: 'text-muted-foreground hover:text-foreground data-[state=open]:text-foreground',
-        foreground: '',
-        inverse: '',
+        primary: 'bg-primary text-primary-foreground',
+        mono: 'bg-zinc-950 text-white dark:bg-zinc-300 dark:text-black',
+        destructive: 'bg-destructive text-destructive-foreground',
+        secondary: 'bg-secondary text-secondary-foreground',
+        outline: `bg-background text-accent-foreground border-input hover:bg-accent border`,
+        dashed: `text-accent-foreground border-input bg-background hover:bg-accent hover:text-accent-foreground border border-dashed`,
+        ghost: `text-accent-foreground hover:bg-accent hover:text-accent-foreground`,
+        dim: 'text-muted-foreground hover:text-foreground',
       },
       appearance: {
         default: '',
@@ -44,7 +40,6 @@ const buttonVariants = cva(
         lg: 'h-10 gap-1.5 rounded-md px-4 text-sm [&_svg:not([class*=size-])]:size-4',
         md: 'h-8.5 gap-1.5 rounded-md px-3 text-[0.8125rem] leading-(--text-sm--line-height) [&_svg:not([class*=size-])]:size-4',
         sm: 'h-7 gap-1.25 rounded-md px-2.5 text-xs [&_svg:not([class*=size-])]:size-3.5',
-        icon: 'size-8.5 shrink-0 rounded-md [&_svg:not([class*=size-])]:size-4',
       },
       autoHeight: {
         true: '',
@@ -55,11 +50,10 @@ const buttonVariants = cva(
         circle: 'rounded-full',
       },
       mode: {
-        default:
-          'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2',
+        default: `focus-visible:ring-ring select-none focus-visible:ring-2 focus-visible:ring-offset-2`,
         icon: 'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2',
-        link: 'text-primary h-auto rounded-none bg-transparent p-0 hover:bg-transparent data-[state=open]:bg-transparent',
-        input: `hover:bg-background [&_svg]:hover:text-foreground data-[state=open]:bg-background focus-visible:border-ring focus-visible:ring-ring/30 [[data-state=open]>&]:border-ring [[data-state=open]>&]:ring-ring/30 aria-invalid:border-destructive/60 aria-invalid:ring-destructive/10 dark:aria-invalid:border-destructive dark:aria-invalid:ring-destructive/20 in-data-[invalid=true]:border-destructive/60 in-data-[invalid=true]:ring-destructive/10 dark:in-data-[invalid=true]:border-destructive dark:in-data-[invalid=true]:ring-destructive/20 justify-start font-normal focus-visible:ring-[3px] focus-visible:outline-hidden [&_svg]:transition-colors [[data-state=open]>&]:ring-[3px] [[data-state=open]>&]:outline-hidden`,
+        link: 'text-primary h-auto rounded-none bg-transparent p-0',
+        input: `hover:bg-background [&_svg]:hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/30 [[data-state=open]>&]:border-ring [[data-state=open]>&]:ring-ring/30 aria-invalid:border-destructive/60 aria-invalid:ring-destructive/10 dark:aria-invalid:border-destructive dark:aria-invalid:ring-destructive/20 in-data-[invalid=true]:border-destructive/60 in-data-[invalid=true]:ring-destructive/10 dark:in-data-[invalid=true]:border-destructive dark:in-data-[invalid=true]:ring-destructive/20 justify-start font-normal focus-visible:ring-[3px] focus-visible:outline-hidden [&_svg]:transition-colors [[data-state=open]>&]:ring-[3px] [[data-state=open]>&]:outline-hidden`,
       },
       placeholder: {
         true: 'text-muted-foreground',
@@ -230,76 +224,16 @@ const buttonVariants = cva(
           'text-primary hover:text-primary/90 font-medium underline decoration-dashed decoration-1 underline-offset-4 [&_svg]:opacity-60',
       },
 
-      {
-        variant: 'inverse',
-        mode: 'link',
-        underline: 'solid',
-        className:
-          'font-medium text-inherit hover:underline hover:decoration-solid hover:underline-offset-4 [&_svg:not([role=img]):not([class*=text-])]:opacity-60',
-      },
-      {
-        variant: 'inverse',
-        mode: 'link',
-        underline: 'dashed',
-        className:
-          'font-medium text-inherit decoration-1 hover:underline hover:decoration-dashed hover:underline-offset-4 [&_svg:not([role=img]):not([class*=text-])]:opacity-60',
-      },
-      {
-        variant: 'inverse',
-        mode: 'link',
-        underlined: 'solid',
-        className:
-          'font-medium text-inherit underline decoration-solid underline-offset-4 [&_svg:not([role=img]):not([class*=text-])]:opacity-60',
-      },
-      {
-        variant: 'inverse',
-        mode: 'link',
-        underlined: 'dashed',
-        className:
-          'font-medium text-inherit underline decoration-dashed decoration-1 underline-offset-4 [&_svg:not([role=img]):not([class*=text-])]:opacity-60',
-      },
-
-      {
-        variant: 'foreground',
-        mode: 'link',
-        underline: 'solid',
-        className:
-          'text-foreground font-medium hover:underline hover:decoration-solid hover:underline-offset-4 [&_svg:not([role=img]):not([class*=text-])]:opacity-60',
-      },
-      {
-        variant: 'foreground',
-        mode: 'link',
-        underline: 'dashed',
-        className:
-          'text-foreground font-medium decoration-1 hover:underline hover:decoration-dashed hover:underline-offset-4 [&_svg:not([role=img]):not([class*=text-])]:opacity-60',
-      },
-      {
-        variant: 'foreground',
-        mode: 'link',
-        underlined: 'solid',
-        className:
-          'text-foreground font-medium underline decoration-solid underline-offset-4 [&_svg:not([role=img]):not([class*=text-])]:opacity-60',
-      },
-      {
-        variant: 'foreground',
-        mode: 'link',
-        underlined: 'dashed',
-        className:
-          'text-foreground font-medium underline decoration-dashed decoration-1 underline-offset-4 [&_svg:not([role=img]):not([class*=text-])]:opacity-60',
-      },
-
       // Ghost
       {
         variant: 'primary',
         appearance: 'ghost',
-        className:
-          'text-primary/90 hover:bg-primary/5 data-[state=open]:bg-primary/5 bg-transparent',
+        className: 'text-primary/90 hover:bg-primary/5 bg-transparent',
       },
       {
         variant: 'destructive',
         appearance: 'ghost',
-        className:
-          'text-destructive/90 hover:bg-destructive/5 data-[state=open]:bg-destructive/5 bg-transparent',
+        className: 'text-destructive/90 hover:bg-destructive/5 bg-transparent',
       },
       {
         variant: 'ghost',
@@ -316,10 +250,6 @@ const buttonVariants = cva(
       {
         size: 'md',
         mode: 'icon',
-        className: 'h-8.5 w-8.5 p-0 [&_svg:not([class*=size-])]:size-4',
-      },
-      {
-        size: 'icon',
         className: 'h-8.5 w-8.5 p-0 [&_svg:not([class*=size-])]:size-4',
       },
       {

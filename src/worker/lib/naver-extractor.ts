@@ -14,8 +14,13 @@ export async function extractNaverBlogContent({
   const html = await response.text();
 
   const $ = cheerio.load(html);
-  const title = $('.se-title-text').html();
-  const content = $('.se-main-container').html();
+  const title = $('.se-title-text').text().trim();
+  const content = $('.se-main-container').html() ?? '';
 
-  return htmlToMarkdown(`${title}${content}`);
+  let result = '';
+  if (title) result += `# ${title}\n`;
+
+  result += htmlToMarkdown(content);
+
+  return result;
 }

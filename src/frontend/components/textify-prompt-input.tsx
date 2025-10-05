@@ -44,14 +44,14 @@ export function TextifyPromptInput({
         <div className="flex items-center gap-2">
           <Button
             variant="mono"
-            size="icon"
-            className="size-8 rounded-full"
+            mode="icon"
+            shape="circle"
             onClick={() => onSubmit?.()}
             disabled={disabled}
           >
             <ArrowUp
               className={cn(
-                'size-5 transition-all duration-400 ease-in-out',
+                'transition-all duration-400 ease-in-out',
                 isLoading && 'rotate-180',
               )}
             />

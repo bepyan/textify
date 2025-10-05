@@ -65,6 +65,8 @@ const ResultSchema = z
       .object({
         events: z.array(
           z.object({
+            tStartMs: z.number(),
+            dDurationMs: z.number(),
             segs: z.array(
               z.object({
                 utf8: z.string(),

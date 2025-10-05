@@ -6,8 +6,8 @@ import { Providers } from '@fe/components/providers';
 const RootLayout = () => (
   <Providers>
     <div className="text-foreground bg-background isolate font-sans antialiased">
-      <Gnb />
-      <main className="flex h-dvh w-full flex-col">
+      <main className="relative flex h-dvh w-full flex-col">
+        <Gnb />
         <Outlet />
       </main>
     </div>
