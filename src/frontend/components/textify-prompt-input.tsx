@@ -37,7 +37,6 @@ export function TextifyPromptInput({
         ref={ref}
         autoFocus
         placeholder="링크를 입력해주세요..."
-        onPaste={() => onSubmit?.()}
       />
       <PromptInputActions>
         <div></div>
