@@ -9,7 +9,7 @@
   "typescript.updateImportsOnFileMove.enabled": "always",
   "files.associations": {
     "wrangler.json": "jsonc",
-    "wrangler.example.json": "jsonc"
+    "wrangler.local.json": "jsonc"
   },
   "files.readonlyInclude": {
     "worker-configuration.d.ts": true,

@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "vite dev",
-    "dev:cf": "wrangler dev",
-    "gen:cf": "wrangler types",
+    "dev:cf": "wrangler dev --config wrangler.local.json",
+    "gen:cf": "wrangler types --config wrangler.local.json",
     "build": "vite build",
     "deploy": "wrangler deploy",
     "lint": "eslint --cache . && prettier --check --cache .",
