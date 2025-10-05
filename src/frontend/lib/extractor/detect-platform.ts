@@ -5,7 +5,7 @@ export function detectPlatform(url: string): Platform {
     return 'naver';
   }
 
-  if (url.includes('youtube')) {
+  if (url.includes('youtube') || url.includes('youtu.be')) {
     return 'youtube';
   }
 
