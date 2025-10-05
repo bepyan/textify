@@ -72,7 +72,7 @@ export interface YoutubeThumbnail {
 // ============================================================================
 
 export interface YoutubeCaptionData {
-  wireMagic: 'pb3' | string;
+  wireMagic: string;
   pens: Record<string, unknown>[];
   wsWinStyles: Record<string, unknown>[];
   wpWinPositions: Record<string, unknown>[];

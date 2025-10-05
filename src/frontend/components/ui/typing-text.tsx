@@ -89,7 +89,7 @@ export function TypingText({
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, {
     once,
-    margin: inViewMargin as UseInViewOptions['margin'],
+    margin: inViewMargin,
   });
   const [hasAnimated, setHasAnimated] = useState(false);
   const [displayText, setDisplayText] = useState('');

@@ -9,17 +9,29 @@ import globals from 'globals';
 import ts from 'typescript-eslint';
 
 const gitignorePath = fileURLToPath(new URL('.gitignore', import.meta.url));
+const prettierignorePath = fileURLToPath(
+  new URL('.prettierignore', import.meta.url),
+);
 
 export default defineConfig(
   includeIgnoreFile(gitignorePath),
+  includeIgnoreFile(prettierignorePath),
   //
   // JavaScript 파일 권장 설정입니다.
   // @see https://github.com/eslint/eslint/blob/main/packages/js/src/configs/eslint-recommended.js
   js.configs.recommended,
   //
   // TypeScript 파일 권장 설정입니다.
-  // @see https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/configs/flat/recommended.ts
-  ts.configs.recommended,
+  // @see https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/configs/flat/recommended-type-checked.ts
+  ts.configs.recommendedTypeChecked,
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
   ...routerPlugin.configs['flat/recommended'],
   {
     files: ['src/frontend**/*'],
@@ -50,6 +62,12 @@ export default defineConfig(
           caughtErrorsIgnorePattern: '^_',
           destructuredArrayIgnorePattern: '^_',
           varsIgnorePattern: '^_',
+        },
+      ],
+      '@typescript-eslint/no-misused-promises': [
+        'error',
+        {
+          checksVoidReturn: false,
         },
       ],
     },
