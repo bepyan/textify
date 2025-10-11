@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-import { TextifyApp } from '@fe/features/textify-app';
+import { TextifyIntro } from '@fe/features/textify-intro';
 
 export const Route = createFileRoute('/')({
-  component: TextifyApp,
+  component: TextifyIntro,
 });

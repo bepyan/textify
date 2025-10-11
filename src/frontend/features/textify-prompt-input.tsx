@@ -18,7 +18,7 @@ export function TextifyPromptInput({
   onSubmit,
 }: {
   ref?: React.RefObject<HTMLTextAreaElement | null>;
-  isLoading: boolean;
+  isLoading?: boolean;
   value?: string;
   onValueChange?: (value: string) => void;
   onSubmit?: () => void;

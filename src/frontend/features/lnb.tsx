@@ -39,15 +39,16 @@ export function LnbContainer({ children }: { children: React.ReactNode }) {
   const isLnbOpen = useLnbStore((v) => v.isOpen);
   const closeLnb = useLnbStore((v) => v.close);
 
+  // TODO: Focus Guard
   return (
     <div className="overflow-x-hidden">
       <div
         className={cn(
-          'relative h-screen transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)]',
+          'relative h-dvh transition-transform duration-500 ease-[cubic-bezier(.22,1,.36,1)]',
           isLnbOpen && 'translate-x-lnb',
         )}
       >
-        <div className="fixed top-0 left-0 h-screen" aria-hidden={!isLnbOpen}>
+        <div className="fixed top-0 left-0 h-dvh" aria-hidden={!isLnbOpen}>
           <LnbNav />
         </div>
         {isLnbOpen && (
@@ -59,7 +60,7 @@ export function LnbContainer({ children }: { children: React.ReactNode }) {
         )}
         <div
           className={cn(
-            'pt-header relative container h-full transition-all duration-200 ease-out',
+            'pt-header relative h-full transition-all duration-200 ease-out',
             isLnbOpen && 'pointer-events-none opacity-50 blur-[3px]',
           )}
           aria-hidden={isLnbOpen}
