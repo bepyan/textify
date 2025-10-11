@@ -1,8 +1,8 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 
-import { Gnb } from '@fe/components/gnb';
-import { LnbContainer } from '@fe/components/lnb';
-import { Providers } from '@fe/components/providers';
+import { Gnb } from '@fe/features/gnb';
+import { LnbContainer } from '@fe/features/lnb';
+import { Providers } from '@fe/features/providers';
 
 const RootLayout = () => (
   <Providers>

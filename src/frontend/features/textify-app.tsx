@@ -4,9 +4,9 @@ import { PromptSuggestion, LogoIcon, Button } from '@fe/components/ui';
 import { useExtractMutation } from '@fe/lib/extractor';
 import { cn } from '@fe/lib/utils';
 
-import { CopyButton } from './copy-button';
 import { TextifyPromptInput } from './textify-prompt-input';
 import { TextifyPromptMessage } from './textify-prompt-message';
+import { CopyButton } from '../components/copy-button';
 
 const howToPrompts = [
   'https://youtube.com/watch?v=utImgpthqoo',

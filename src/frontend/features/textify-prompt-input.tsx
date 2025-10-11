@@ -33,11 +33,7 @@ export function TextifyPromptInput({
       onSubmit={() => onSubmit?.()}
       className="rounded-b-none border-8 border-b-0 pb-4"
     >
-      <PromptInputTextarea
-        ref={ref}
-        autoFocus
-        placeholder="링크를 입력해주세요..."
-      />
+      <PromptInputTextarea ref={ref} placeholder="링크를 입력해주세요..." />
       <PromptInputActions>
         <div></div>
         <div className="flex items-center gap-2">
