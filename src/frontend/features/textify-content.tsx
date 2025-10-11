@@ -3,10 +3,8 @@ import { Suspense } from 'react';
 
 import { CopyButton } from '@fe/components/copy-button';
 import { ErrorBoundary } from '@fe/components/error-boundary';
-import { LogoIcon, Button } from '@fe/components/ui';
+import { LogoIcon, Button, Message, MessageContent } from '@fe/components/ui';
 import { useSuspenseExtract } from '@fe/lib/extractor';
-
-import { TextifyPromptMessage } from './textify-prompt-message';
 
 export type TextifyContentProps = {
   url: string;
@@ -29,7 +27,9 @@ function TextifyContentDetail({ url }: TextifyContentProps) {
     <>
       <div className="absolute inset-0 w-full overflow-y-auto">
         <div className="pt-header pb-footer container">
-          <TextifyPromptMessage content={content} />
+          <Message className="flex-col justify-start gap-2">
+            <MessageContent markdown>{content}</MessageContent>
+          </Message>
         </div>
       </div>
       <div className="absolute inset-x-0 bottom-0 z-10">

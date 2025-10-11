@@ -1,11 +1,9 @@
-import { useNavigate, useRouter } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import { toast } from 'sonner';
 
+import { TextifyPromptInput } from '@fe/components/textify-prompt-input';
 import { PromptSuggestion, LogoIcon } from '@fe/components/ui';
 import { detectPlatform } from '@fe/lib/extractor/detect-platform';
-
-import { TextifyPromptInput } from './textify-prompt-input';
 
 const howToPrompts = [
   'https://youtube.com/watch?v=utImgpthqoo',
@@ -14,13 +12,12 @@ const howToPrompts = [
 
 export function TextifyIntro() {
   const navigate = useNavigate({ from: '/' });
-  const [inputValue, setInputValue] = useState('');
 
   // ----------------------------------------------------------------------------
   // handlers
   // ----------------------------------------------------------------------------
 
-  const handleSubmit = async (value = inputValue) => {
+  const handleSubmit = async (value: string) => {
     const platform = detectPlatform(value);
 
     if (platform === 'unknown') {
@@ -36,11 +33,6 @@ export function TextifyIntro() {
     });
   };
 
-  const handleClickSuggestion = (prompt: string) => {
-    setInputValue(prompt);
-    void handleSubmit(prompt);
-  };
-
   return (
     <>
       <div className="absolute inset-0 w-full overflow-y-auto">
@@ -53,7 +45,7 @@ export function TextifyIntro() {
                 <PromptSuggestion
                   key={prompt}
                   className="justify-center"
-                  onClick={() => handleClickSuggestion(prompt)}
+                  onClick={() => handleSubmit(prompt)}
                 >
                   {prompt}
                 </PromptSuggestion>
@@ -62,13 +54,11 @@ export function TextifyIntro() {
           </div>
         </div>
       </div>
-      <div className="absolute inset-x-0 bottom-0 z-10">
+      <div className="absolute inset-x-0 bottom-10 z-10">
         <div className="container">
-          <TextifyPromptInput
-            value={inputValue}
-            onValueChange={setInputValue}
-            onSubmit={() => handleSubmit()}
-          />
+          <div className="px-2">
+            <TextifyPromptInput onSubmit={(url) => handleSubmit(url)} />
+          </div>
         </div>
       </div>
     </>

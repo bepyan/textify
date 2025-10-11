@@ -51,7 +51,7 @@ const buttonVariants = cva(
       },
       mode: {
         default: `focus-visible:ring-ring select-none focus-visible:ring-2 focus-visible:ring-offset-2`,
-        icon: 'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2',
+        icon: 'focus-visible:ring-ring rounded-full focus-visible:ring-2 focus-visible:ring-offset-2',
         link: 'text-primary h-auto rounded-none bg-transparent p-0',
         input: `hover:bg-background [&_svg]:hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/30 [[data-state=open]>&]:border-ring [[data-state=open]>&]:ring-ring/30 aria-invalid:border-destructive/60 aria-invalid:ring-destructive/10 dark:aria-invalid:border-destructive dark:aria-invalid:ring-destructive/20 in-data-[invalid=true]:border-destructive/60 in-data-[invalid=true]:ring-destructive/10 dark:in-data-[invalid=true]:border-destructive dark:in-data-[invalid=true]:ring-destructive/20 justify-start font-normal focus-visible:ring-[3px] focus-visible:outline-hidden [&_svg]:transition-colors [[data-state=open]>&]:ring-[3px] [[data-state=open]>&]:outline-hidden`,
       },
