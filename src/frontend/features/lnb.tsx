@@ -1,10 +1,11 @@
 import { Link } from '@tanstack/react-router';
 import { PanelLeftDashedIcon, PanelLeftIcon } from 'lucide-react';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 import { Button, LogoIcon } from '@fe/components/ui';
 import { cn } from '@fe/lib/utils';
+
+import { useHistoryStore } from './history-store';
 
 // ============================================================================
 // LNB Store
@@ -12,24 +13,15 @@ import { cn } from '@fe/lib/utils';
 
 export const useLnbStore = create<{
   isOpen: boolean;
-  historyList: string[];
   open: () => void;
   close: () => void;
   toggle: () => void;
-}>()(
-  persist(
-    (set) => ({
-      isOpen: false,
-      historyList: [],
-      open: () => set({ isOpen: true }),
-      close: () => set({ isOpen: false }),
-      toggle: () => set((v) => ({ isOpen: !v.isOpen })),
-    }),
-    {
-      name: 'lnb-store',
-    },
-  ),
-);
+}>((set) => ({
+  isOpen: false,
+  open: () => set({ isOpen: true }),
+  close: () => set({ isOpen: false }),
+  toggle: () => set((v) => ({ isOpen: !v.isOpen })),
+}));
 
 // ============================================================================
 // LNB Components
@@ -73,7 +65,7 @@ export function LnbContainer({ children }: { children: React.ReactNode }) {
 }
 
 function LnbNav() {
-  const historyList = useLnbStore((v) => v.historyList);
+  const historyList = useHistoryStore((v) => v.list);
   const closeLnb = useLnbStore((v) => v.close);
 
   return (
@@ -87,7 +79,7 @@ function LnbNav() {
         variant="mono"
         className="w-full"
         render={<Link to="/" />}
-        onClick={() => closeLnb()}
+        onClick={closeLnb}
       >
         새로운 콘텐츠
       </Button>
@@ -97,8 +89,16 @@ function LnbNav() {
             <span>아직 사용한 내역이 없어요.</span>
           </li>
         ) : (
-          historyList.map((item, index) => (
-            <li key={`${index}-${item}`}>{item}</li>
+          historyList.map((item) => (
+            <li key={item.id}>
+              <Button
+                variant="ghost"
+                render={<Link to="/content" search={{ url: item.url }} />}
+                onClick={closeLnb}
+              >
+                {item.url}
+              </Button>
+            </li>
           ))
         )}
       </ul>

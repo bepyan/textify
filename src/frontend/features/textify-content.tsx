@@ -5,6 +5,9 @@ import { CopyButton } from '@fe/components/copy-button';
 import { ErrorBoundary } from '@fe/components/error-boundary';
 import { LogoIcon, Button, Message, MessageContent } from '@fe/components/ui';
 import { useSuspenseExtract } from '@fe/lib/extractor';
+import { useMountEffect } from '@fe/lib/hooks';
+
+import { useHistoryStore } from './history-store';
 
 export type TextifyContentProps = {
   url: string;
@@ -22,6 +25,11 @@ export function TextifyContent(props: TextifyContentProps) {
 
 function TextifyContentDetail({ url }: TextifyContentProps) {
   const { data: content } = useSuspenseExtract(url);
+  const addHistory = useHistoryStore((v) => v.add);
+
+  useMountEffect(() => {
+    addHistory(url);
+  });
 
   return (
     <>
