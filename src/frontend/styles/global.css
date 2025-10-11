@@ -4,6 +4,7 @@
 :root {
   --header-h: 3.375rem;
   --footer-h: 10rem;
+  --lnb-w: 18.75rem;
 }
 
 @theme {
@@ -11,6 +12,9 @@
 
   --spacing-header: var(--header-h);
   --spacing-footer: var(--footer-h);
+  --spacing-lnb: var(--lnb-w);
+
+  --spacing-safe-offset-top: calc(max(20vh, 2.5rem));
   --spacing-safe-offset: calc(
     env(safe-area-inset-top) + --theme(--spacing) * 1
   );
@@ -19,6 +23,9 @@
   );
   --spacing-safe-offset-3: calc(
     env(safe-area-inset-top) + --theme(--spacing) * 3
+  );
+  --spacing-safe-offset-5: calc(
+    env(safe-area-inset-top) + --theme(--spacing) * 5
   );
 }
 

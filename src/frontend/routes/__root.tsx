@@ -1,15 +1,16 @@
 import { createRootRoute, Outlet } from '@tanstack/react-router';
 
 import { Gnb } from '@fe/components/gnb';
+import { LnbContainer } from '@fe/components/lnb';
 import { Providers } from '@fe/components/providers';
 
 const RootLayout = () => (
   <Providers>
     <div className="text-foreground bg-background isolate font-sans antialiased">
-      <main className="relative flex h-dvh w-full flex-col">
-        <Gnb />
+      <Gnb />
+      <LnbContainer>
         <Outlet />
-      </main>
+      </LnbContainer>
     </div>
   </Providers>
 );
