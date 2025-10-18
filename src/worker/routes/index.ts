@@ -4,6 +4,7 @@ import { HTTPException } from 'hono/http-exception';
 
 import extractNaver from './api.extract.naver';
 import extractYoutube from './api.extract.youtube';
+import qtLatest from './api.qt.latest';
 import sample from './api.sample';
 
 // ============================================================================
@@ -14,7 +15,8 @@ const app = new OpenAPIHono()
   ///////////////////////////////////////////////////////////////////////////
   .route('/api/sample', sample)
   .route('/api/extract/naver', extractNaver)
-  .route('/api/extract/youtube', extractYoutube);
+  .route('/api/extract/youtube', extractYoutube)
+  .route('/api/qt/latest', qtLatest);
 
 // ============================================================================
 // Docs
