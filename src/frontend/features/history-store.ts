@@ -2,7 +2,7 @@ import { customAlphabet } from 'nanoid';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-type HistoryItem = {
+export type HistoryItem = {
   id: string;
   url: string;
   createdAt: string;
@@ -48,3 +48,35 @@ export const useHistoryStore = create<{
     },
   ),
 );
+
+export function categorizeHistory(historyList: HistoryItem[]) {
+  const now = new Date();
+  const todayStart = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  ).getTime();
+  const sevenDaysAgo = todayStart - 7 * 24 * 60 * 60 * 1000;
+
+  const today: HistoryItem[] = [];
+  const last7Days: HistoryItem[] = [];
+  const older: HistoryItem[] = [];
+
+  const sortedList = [...historyList].sort((a, b) => {
+    return parseInt(b.createdAt) - parseInt(a.createdAt);
+  });
+
+  sortedList.forEach((item) => {
+    const createdAt = parseInt(item.createdAt);
+
+    if (createdAt >= todayStart) {
+      today.push(item);
+    } else if (createdAt >= sevenDaysAgo) {
+      last7Days.push(item);
+    } else {
+      older.push(item);
+    }
+  });
+
+  return { today, last7Days, older };
+}

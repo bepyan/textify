@@ -2,7 +2,7 @@
 @import './markdown.css';
 
 :root {
-  --header-h: 3.375rem;
+  --header-h: 3.125rem;
   --footer-h: 10rem;
   --lnb-w: 18.75rem;
 }

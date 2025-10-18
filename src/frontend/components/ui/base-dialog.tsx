@@ -79,7 +79,7 @@ function DialogPopup({
     <DialogPrimitive.Popup
       data-slot="dialog-popup"
       className={cn(
-        `bg-background fixed z-50 grid gap-4 border p-6 shadow-lg shadow-black/5 transition-all duration-150 data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0 sm:rounded-lg`,
+        `bg-background fixed z-50 grid gap-4 rounded-lg border p-6 shadow-lg shadow-black/5 transition-all duration-150 data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0`,
         fullscreen
           ? 'inset-5'
           : 'top-[50%] left-[50%] w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] sm:max-w-lg',
@@ -152,10 +152,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="dialog-footer"
-      className={cn(
-        'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2.5',
-        className,
-      )}
+      className={cn('flex items-center justify-end gap-2.5', className)}
       {...props}
     />
   );
